@@ -28,4 +28,5 @@ router.delete("/deletedByQueryParams",authorMid.TokenValidation, blogsController
 //AuthorLogin
 router.post("/login",authorController.Authorlogin)
 
+
 module.exports = router;

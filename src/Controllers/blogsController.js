@@ -123,7 +123,7 @@ const updateBlog = async function (req, res) {
       { $set: { title: title, body: body, tags: tags, subcategory: subcategory, isPublished: true, publishedAt: dateStr } },
       { new: true })
     const blogData = updatblog ?? 'Blog not found.'
-    res.status(201).send({ Status: true, Data: blogData })
+    res.status(200).send({ Status: true, Data: blogData })
   }
 
   catch (err) {
@@ -143,7 +143,7 @@ const deleteblog = async function (req, res) {
     }
     let deletedblog = await blogsModel.findOneAndUpdate(
       { _id: BlogId },
-      { $set: { isDeleted: true } }
+      { $set: { isDeleted: true, deletedAt: dateStr } }
     );
 
     res.status(200).send({ status: true, msg: "Data Deleted succefully" });
