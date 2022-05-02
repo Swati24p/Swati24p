@@ -19,7 +19,7 @@ const TokenValidation = (req, res, next) => {
             return res.status(401).send({ status: false, msg: "Token must be present" });
         }
 
-        let decodedToken = jwt.decode(jwttoken, "Uranium-Group-24"); //verifying token with secret key
+        let decodedToken = jwt.verify(jwttoken, "Uranium-Group-24"); //verifying token with secret key
 
         if (decodedToken.length == 0) { return res.status(401).send({ status: false, msg: "Token is incorrect" }) }
 
@@ -82,7 +82,7 @@ const authorizationForDelete = async function (req, res, next) {
     try {
         let token = req.headers["x-Api-key"]; //getting token from header
         token = req.headers["x-api-key"];
-        let decodedToken = jwt.decode(token, "Uranium-Group-24"); //verifying token with secret key
+        let decodedToken = jwt.verify(token, "Uranium-Group-24"); //verifying token with secret key
         
         let loggedInUser = decodedToken.authorId; //getting logged in user id from token
         let authorLogging;

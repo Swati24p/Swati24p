@@ -11,7 +11,7 @@ const createAuthor = async function (req, res) {
         if (Object.keys(requestBody).length == 0) {
             return res.status(400).send({
                 status: false,
-                msg: "Invalid request parameters. Please provide blog details",
+                msg: "Invalid request parameters. Please provide AUTHOR details",
             });
         }
 
