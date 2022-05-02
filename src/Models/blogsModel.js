@@ -5,33 +5,35 @@ const blogSchema = new mongoose.Schema ({
     title: {
         type: String,
         required: true,
-        trim : true
+        trim: true
     }, 
     
     body: {
         type : String,
         required: true,
-        trim : true
+        trim:true
     }, 
 
     authorId: {
         type: ObjectId,
         required: true,
-        ref: "Author"
+        ref: "Author",
+        trim:true
     },
 
     tags: {
-        type: [String]
+        type: [String],
+        trim:true
     }, 
 
     category: {
         type: String,
         required: true,
-        trim : true 
-    },
-
+        trim:true 
+    }, 
     subcategory: {
-        type: [String], 
+        type: [String],
+        trim:true
     },
 
     deletedAt: {
