@@ -24,7 +24,7 @@ const internSchema = new mongoose.Schema ({
         trim: true
     }, 
     isDeleted: {
-        type: boolean, 
+        type: Boolean, 
         default: false
     }
 }, {timestamps: true})
