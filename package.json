@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.2",
+    "route": "^0.2.5"
+  },
+  "name": "project2-open-to-intern-project",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamjerry07/Project2-Open-to-Intern-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iamjerry07/Project2-Open-to-Intern-Project/issues"
+  },
+  "homepage": "https://github.com/iamjerry07/Project2-Open-to-Intern-Project#readme"
+}
