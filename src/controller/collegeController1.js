@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const collegeModel = require("../models/collegeModel");
+const internModel = require("../models/internModel");
+
 
 
 //---------------------------------------------------- API 1-------------------------------------------------------//
@@ -50,7 +52,27 @@ let createCollege = await collegeModel.create(requestbody)
 
 }
 
+//-----------------------------------------------API-3--------------------------------------------------------//
+// GET /functionup/collegeDetails
+// Returns the college details for the requested college (Expect a query parameter 
+//by the name collegeName. This is anabbreviated college name. For example iith)
+// Returns the list of all interns who have applied for internship at this college.
+// The response structure should look like this
+
+const getCollegeDetails = async function (req, res) {
+let collegeName= req.query.collegeName
+let getData = await collegeModel.find({name:collegeName}).select({_id:1})
+
+let getIntern= await internModel.find({collegeId:getData})
+
+let finalData= await collegeModel.find({name:collegeName}).select({name:1,fullName:1,logoLink:1,_id:0})
+if(getIntern){
+  finalData[getIntern]=getIntern
+return res.send({msg:finalData})}
+}
+
 
 
 module.exports.createCollege = createCollege
+module.exports.getCollegeDetails = getCollegeDetails
 
