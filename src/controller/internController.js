@@ -46,10 +46,10 @@ if (!mobile) {
 //ValidObjId--
 let collegeEnter;
   if (req.body.hasOwnProperty("collegeId")) {                 //if collegeId is present in request body
-         //checking whether the collegeId is valid or not
-        if (!isValidObjectId(req.body.collegeId)) return res.status(400).send({ status: false, msg: "Enter a valid collegeId" })
+        if (!isValidObjectId(req.body.collegeId))              //checking whether the collegeId is valid or not
+        return res.status(400).send({ status: false, msg: "Enter a valid collegeId" })
         collegeEnter = req.body.collegeId;                       //getting collegeId from request body
-        }
+}
 
 
 // Email validations
@@ -68,27 +68,25 @@ if (emailId) {
 let emailValidate = await internModel.findOne({email:emailId})
 
 if(emailValidate) {
-    return res.status(409).send ({ status:false, msg:"e-Mail already registered" })
+    return res.status(409).send ({ status:false, msg: "e-Mail already registered" })
 }
 
 
-  
 // Mobile validations  
-    if((mobileNo.toString().length)!=10) {
+    if ((mobileNo.toString().length) != 10) {
     return res.status(400).send({ status:false, msg:"Mobile number is not valid" })
 }
 
     let mobileValidate = await internModel.findOne({mobile:mobileNo})
-    if(mobileValidate) {
+    if (mobileValidate) {
     return res.status(400).send ({ status:false,msg:"Mobile number already registered" })
 }
     
-
 // data creation
 let createInterns = await internModel.create(data)
     return res.status(201).send({ status: true, msg: createInterns })
-
 }
+
 catch (error) {
     res.status(500).send({ status: false, msg: error.message })
  }
