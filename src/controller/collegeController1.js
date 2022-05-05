@@ -31,7 +31,6 @@ const createCollege = async function (req, res) {
         if (!logoLink) {
             return res.status(400).send({ status: false, msg: "logoLink should be present in request body" })
         }
-        if (name){name.toLowerCase()}
 
         //logolinkvalidation-
         const validlogoLink =
@@ -93,7 +92,7 @@ const getCollegeDetails = async function (req, res) {
         if (Object.keys(interns).length === 0) {
             return res.status(404).send({ msg: "Interns not found in college" })
         }
-        let finalResult = await collegeModel.find({ name: collegeName }).collation({ locale: 'en', strength: 2 })
+        let finalResult = await collegeModel.find({ name: collegeName ,isDeleted: true}).collation({ locale: 'en', strength: 2 })
         .select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
 
         // data creation
@@ -101,12 +100,12 @@ const getCollegeDetails = async function (req, res) {
             name: finalResult[0].name,
             fullName: finalResult[0].fullName,
             logolink: finalResult[0].logoLink,
-            intrests: interns
+            intrests: interns 
         }
         return res.status(200).send({ data: object })
     }
     catch (error) {
-        res.status(500).send({ status: false, msg: error.message })
+        res.status(500).send({ status: false,  msg: error.message })
     }
 }
 

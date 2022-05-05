@@ -26,8 +26,7 @@ const createInterns = async function (req, res) {
         let mobileNo = req.body.mobile
         let { name, email, mobile } = data
         let collegeId = req.body.collegeId
-        console.log(collegeId)
-
+        
         // for blank body check
         if (Object.keys(data).length === 0) {
             return res.status(400).send({
@@ -35,7 +34,6 @@ const createInterns = async function (req, res) {
                 msg: "data should be present for further request."
             });
         }
-
 
         // required attributes
         if (!name) {
@@ -46,6 +44,9 @@ const createInterns = async function (req, res) {
         }
         if (!mobile) {
             return res.status(400).send({ status: false, msg: "Intern mobile no. should be present" })
+        }
+        if (!collegeId) {
+            return res.status(400).send({ status: false, msg: "Intern collegeId should be present" })
         }
 
         //ValidObjId--
@@ -65,10 +66,7 @@ const createInterns = async function (req, res) {
         // Email validations
         if (emailId) {
             let validmail = /^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(emailId);
-            if (!validmail) {
-                return res
-                    .status(400)
-                    .send({ status: false, message: "Enter an valid email" });
+            if (!validmail) { return res.status(400).send({ status: false, message: "Enter an valid email" });
             }
         }
 
@@ -77,11 +75,11 @@ const createInterns = async function (req, res) {
         if (emailValidate) {
             return res.status(409).send({ status: false, msg: "e-Mail registered already" })
         }
-
+        
+        // Mobile validations 
         const validMobile = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile);
         if (!validMobile) { return res.status(400).send({ status: false, msg: "Enter valid mobile number" }) }
 
-        
         let mobileValidate = await internModel.findOne({ mobile: mobileNo })
         if (mobileValidate) {
             return res.status(400).send({ status: false, msg: "Mobile number already registered" })
