@@ -34,13 +34,13 @@ if(Object.keys(data).length === 0) {
 
 // required attributes
 if (!name) {
-    return res.status(400).send ({ status:false, msg:"name should be present" })
+    return res.status(400).send ({ status:false, msg:"Intern name should be present" })
 }
 if (!email) { 
-    return res.status(400).send ({ status:false, msg:"email should be present" })
+    return res.status(400).send ({ status:false, msg:"Intern email should be present" })
 }
 if (!mobile) {
-    return res.status(400).send ({ status:false, msg:"mobile no. should be present" })
+    return res.status(400).send ({ status:false, msg:"Intern mobile no. should be present" })
 }
 
 //ValidObjId--
@@ -61,20 +61,20 @@ if (emailId) {
     if (!validmail) {
       return res
         .status(400)
-        .send({ status: false, message: "Enter valid email" });
+        .send({ status: false, message: "Enter an valid email" });
     }
   }
 
 let emailValidate = await internModel.findOne({email:emailId})
 
 if(emailValidate) {
-    return res.status(409).send ({ status:false, msg: "e-Mail already registered" })
+    return res.status(409).send ({ status:false, msg: "e-Mail registered already" })
 }
 
 
 // Mobile validations  
     if ((mobileNo.toString().length) != 10) {
-    return res.status(400).send({ status:false, msg:"Mobile number is not valid" })
+    return res.status(400).send({ status:false, msg: "Mobile number is not valid" })
 }
 
     let mobileValidate = await internModel.findOne({mobile:mobileNo})

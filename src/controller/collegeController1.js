@@ -39,14 +39,14 @@ const createCollege = async function (req, res) {
                 req.body.logoLink
         );
         if (!validlogoLink) {
-            return res.status(404).send({ status: false, message: `Invalid url` });
+            return res.status(404).send({ status: false, message: 'Invalid url' });
         }
 
         let Name = await collegeModel.findOne({ name: req.body.name });
         if (Name) {
           return res.status(400).send({ status: false, message: `${req.body.name} this college already exist` });
         }
-        
+
         let createCollege = await collegeModel.create(requestbody)
         return res.status(201).send({
             status: true,
