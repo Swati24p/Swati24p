@@ -77,8 +77,8 @@ const getCollegeDetails = async function (req, res) {
             return res.status(400).send({ msg: "Please enter college name" })
         }
 
-        let getData = await collegeModel.find({ name: collegeName }).select({ _id: 1 })
-
+        let getData = await collegeModel.find({ name: collegeName }).collation( { locale: 'en', strength: 2 } ).select({ _id: 1 })
+        
         if (Object.keys(getData).length === 0) {
             return res.status(404).send({ msg: "College not found" })
         }
@@ -92,13 +92,13 @@ const getCollegeDetails = async function (req, res) {
         if (Object.keys(interns).length === 0) {
             return res.status(404).send({ msg: "Interns not found in college" })
         }
-        let result = await collegeModel.find({ name: collegeName }).select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
-
+        let finalResult = await collegeModel.find({ name: collegeName }).collation({ locale: 'en', strength: 2 }).select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
+        
         // data creation
         const object = {
-            name: result[0].name, 
-            fullName: result[0].fullName, 
-            logolink: result[0].logoLink, 
+            name: finalResult[0].name, 
+            fullName: finalResult[0].fullName, 
+            logolink: finalResult[0].logoLink, 
             intrests: interns
         }
         return res.status(200).send({ data: object })
@@ -106,7 +106,7 @@ const getCollegeDetails = async function (req, res) {
     catch (error) {
         res.status(500).send({ status: false, msg: error.message })
     }
-}
+  }
 
 
 module.exports.createCollege = createCollege
