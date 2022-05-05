@@ -88,11 +88,11 @@ const getCollegeDetails = async function (req, res) {
             return res.status(404).send({ msg: "College is deleted" })
         }
 
-        let interns = await internModel.find({ collegeId: getData })
+        let interns = await internModel.find({ collegeId: getData , isDeleted:false})
         if (Object.keys(interns).length === 0) {
             return res.status(404).send({ msg: "Interns not found in college" })
         }
-        let finalResult = await collegeModel.find({ name: collegeName ,isDeleted: true}).collation({ locale: 'en', strength: 2 })
+        let finalResult = await collegeModel.find({ name: collegeName }).collation({ locale: 'en', strength: 2 })
         .select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
 
         // data creation
