@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const internModel = require("../models/internModel");
+const collegeModel= require("../models/collegeModel")
 
 
 //Below function is to check whether the given string is a valid ObjectId or not
@@ -23,7 +24,8 @@ let data= req.body;
 let emailId= req.body.email
 let mobileNo = req.body.mobile
 let {name, email, mobile} = data
-
+let collegeId= req.body.collegeId
+console.log(collegeId)
 // for blank body check
 if(Object.keys(data).length === 0) {
     return res.status(400).send({
@@ -31,6 +33,11 @@ if(Object.keys(data).length === 0) {
         msg: "data should be present for further request."
     });
 }
+let del = await collegeModel.findById(collegeId).select({isDeleted:1, _id:0})
+if (del.isDeleted==true){
+    return res.send({msg:"College is deleted"})
+}
+
 
 // required attributes
 if (!name) {
