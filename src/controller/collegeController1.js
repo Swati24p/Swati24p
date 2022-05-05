@@ -22,6 +22,7 @@ const createCollege = async function (req, res) {
                 msg: "Invalid request parameters, data should be present for further request."
             });
         }
+        
         if (!name) {
             return res.status(400).send({ status: false, msg: "name should be present in request body" })
         }

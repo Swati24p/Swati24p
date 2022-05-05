@@ -19,23 +19,21 @@ let isValidObjectId= (ObjectId)=> {
 
 
 const createInterns = async function (req, res) {
-    try{
+try{
+
 let data= req.body;
 let emailId= req.body.email
 let mobileNo = req.body.mobile
 let {name, email, mobile} = data
 let collegeId= req.body.collegeId
 console.log(collegeId)
+
 // for blank body check
 if(Object.keys(data).length === 0) {
     return res.status(400).send({
         status: false,
         msg: "data should be present for further request."
-    });
-}
-let del = await collegeModel.findById(collegeId).select({isDeleted:1, _id:0})
-if (del.isDeleted==true){
-    return res.send({msg:"College is deleted"})
+  });
 }
 
 
@@ -58,9 +56,13 @@ let collegeEnter;
         collegeEnter = req.body.collegeId;                       //getting collegeId from request body
 }
 
+//when college deleted=true once--
+let del = await collegeModel.findById(collegeId).select({isDeleted:1, _id:0})
+if (del.isDeleted==true){
+    return res.status(404).send({msg:"College is already deleted cannot able to create intern"})
+}
 
 // Email validations
-
 if (emailId) {
     let validmail = /^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(
         emailId
@@ -83,7 +85,6 @@ if(emailValidate) {
     if ((mobileNo.toString().length) != 10) {
     return res.status(400).send({ status:false, msg: "Mobile number is not valid" })
 }
-
     let mobileValidate = await internModel.findOne({mobile:mobileNo})
     if (mobileValidate) {
     return res.status(400).send ({ status:false,msg:"Mobile number already registered" })
