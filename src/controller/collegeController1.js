@@ -12,7 +12,7 @@ const internModel = require("../models/internModel");
 
 
 const createCollege = async function (req, res) {
-
+try{
      let {name, fullName, logoLink} = req.body
      const requestbody = req.body;
      
@@ -21,19 +21,16 @@ const createCollege = async function (req, res) {
              status: false,
              msg: "data should be present for further request."
          });
-         
-     }
-      
+        }
      if (!name) {
          return res.status(400).send ({ status:false, msg:"name should be present" })
-    }
-
+     }
     if(!fullName) { 
         return res.status(400).send ({ status:false,msg:"fullName should be present"})
-}
-
-    if(!logoLink){ return res.status(400).send ({ status:false, msg:"logoLink should be present" })
-}
+     }
+    if(!logoLink){
+         return res.status(400).send ({ status:false, msg:"logoLink should be present" })
+     }
 
 const validlogoLink =
       /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test (
@@ -49,7 +46,10 @@ let createCollege = await collegeModel.create(requestbody)
         status: true,
         msg: createCollege
     })
-
+  }
+  catch (error) {
+    res.status(500).send({ status: false, msg: error.message })
+  }
 }
 
 //-----------------------------------------------API-3--------------------------------------------------------//
@@ -60,19 +60,49 @@ let createCollege = await collegeModel.create(requestbody)
 // The response structure should look like this
 
 const getCollegeDetails = async function (req, res) {
+
+  try{
 let collegeName= req.query.collegeName
+
+if(!collegeName){
+  return res.status(400).send({msg:"Please enter college name"})
+}
+
+
 let getData = await collegeModel.find({name:collegeName}).select({_id:1})
 
-let getIntern= await internModel.find({collegeId:getData})
-
-let finalData= await collegeModel.find({name:collegeName}).select({name:1,fullName:1,logoLink:1,_id:0})
-if(getIntern){
-  finalData[getIntern]=getIntern
-return res.send({msg:finalData})}
+if(Object.keys(getData).length===0){
+  return res.status(400).send({msg:"College not found"})
 }
+
+let deletedCollege= await collegeModel.findById(getData).select({isDeleted:1})
+if(deletedCollege.isDeleted){
+return res.status(400).send({msg:"College is deleted"})
+}
+
+let interns= await internModel.find({collegeId:getData})
+if(Object.keys(interns).length===0){
+  return res.status(400).send({msg:"Interns not found in college"})
+}
+let result= await collegeModel.find({name:collegeName}).select({name:1,fullName:1,logoLink:1,_id:0})
+
+// data creation
+const object = {
+  name: result[0].name,fullName: result[0]
+  .fullName,logolink: result[0]
+  .logoLink,intrests: interns}
+return res.send({data:object})}
+catch (error) {
+  res.status(500).send({ status: false, msg: error.message })
+}
+}
+
+
 
 
 
 module.exports.createCollege = createCollege
 module.exports.getCollegeDetails = getCollegeDetails
+
+
 
