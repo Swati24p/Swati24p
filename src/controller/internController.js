@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const internModel = require("../models/internModel");
-//const emailValidator= require("email-validator")
+
 
 //Below function is to check whether the given string is a valid ObjectId or not
 let isValidObjectId= (ObjectId)=> {
@@ -61,14 +61,14 @@ if (emailId) {
     if (!validmail) {
       return res
         .status(400)
-        .send({ status: false, message: "  Enter valid email" });
+        .send({ status: false, message: "Enter valid email" });
     }
   }
 
 let emailValidate = await internModel.findOne({email:emailId})
 
 if(emailValidate) {
-    return res.status(409).send ({ status:false, msg:"Mail already registered" })
+    return res.status(409).send ({ status:false, msg:"e-Mail already registered" })
 }
 
 
@@ -93,8 +93,6 @@ catch (error) {
     res.status(500).send({ status: false, msg: error.message })
  }
 }
-
-
 
 
 module.exports.createInterns = createInterns

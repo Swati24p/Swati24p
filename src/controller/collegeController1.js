@@ -12,7 +12,7 @@ const internModel = require("../models/internModel");
 
 
 const createCollege = async function (req, res) {
-
+try {
      let {name, fullName, logoLink} = req.body
      const requestbody = req.body;
      
@@ -35,6 +35,7 @@ const createCollege = async function (req, res) {
     if(!logoLink){ return res.status(400).send ({ status:false, msg:"logoLink should be present" })
 }
 
+//logolinkvalidation-
 const validlogoLink =
       /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test (
         req.body.logoLink
@@ -49,8 +50,13 @@ let createCollege = await collegeModel.create(requestbody)
         status: true,
         msg: createCollege
     })
-
 }
+
+catch (error) {
+    res.status(500).send({ status: false, msg: error.message })
+ }
+}
+
 
 //-----------------------------------------------API-3--------------------------------------------------------//
 // GET /functionup/collegeDetails
@@ -60,17 +66,24 @@ let createCollege = await collegeModel.create(requestbody)
 // The response structure should look like this
 
 const getCollegeDetails = async function (req, res) {
-let collegeName= req.query.collegeName
+try {
+    let collegeName= req.query.collegeName
 let getData = await collegeModel.find({name:collegeName}).select({_id:1})
 
 let getIntern= await internModel.find({collegeId:getData})
 
 let finalData= await collegeModel.find({name:collegeName}).select({name:1,fullName:1,logoLink:1,_id:0})
-if(getIntern){
-  finalData[getIntern]=getIntern
-return res.send({msg:finalData})}
+
+ let interests = getIntern
+if(interests) {
+    finalData = finalData.concat(interests) 
+return res.status(200).send({ count: finalData.length, msg: finalData })}
 }
 
+catch (error) {
+    res.status(500).send({ status: false, msg: error.message })
+ }
+}
 
 
 module.exports.createCollege = createCollege

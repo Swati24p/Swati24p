@@ -5,11 +5,11 @@ const internController = require("../controller/internController");
 
 
 
-router.post('/functionup/colleges', collegeController.createCollege )
+router.post('/functionup/colleges', collegeController.createCollege )   //1
 
-router.post('/functionup/interns', internController.createInterns )
+router.post('/functionup/interns', internController.createInterns )     //2
 
-router.get('/functionup/collegeDetails',collegeController.getCollegeDetails)
+router.get('/functionup/collegeDetails',collegeController.getCollegeDetails)  //3
 
 
 
