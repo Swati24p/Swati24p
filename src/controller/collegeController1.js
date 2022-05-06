@@ -21,6 +21,7 @@ const createCollege = async function (req, res) {
                 msg: "Invalid request parameters, data should be present for further request."
             });
         }
+        // required attributes
 
         if (!name) {
             return res.status(400).send({ status: false, msg: "name should be present in request body" })
@@ -46,6 +47,7 @@ const createCollege = async function (req, res) {
             return res.status(400).send({ status: false, message: `${req.body.name} this college already exist` });
         }
 
+        // data creation
         let createCollege = await collegeModel.create(requestbody)
         return res.status(201).send({
             status: true,
@@ -108,7 +110,7 @@ const getCollegeDetails = async function (req, res) {
         res.status(500).send({ status: false,  msg: error.message })
     }
 }
-
+  
 
 module.exports.createCollege = createCollege
 module.exports.getCollegeDetails = getCollegeDetails

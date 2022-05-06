@@ -50,11 +50,10 @@ const createInterns = async function (req, res) {
         }
 
         //ValidObjId--
-        let collegeEnter;
-        if (req.body.hasOwnProperty("collegeId")) {                 //if collegeId is present in request body
-            if (!isValidObjectId(req.body.collegeId))               //checking whether the collegeId is valid or not
+        
+        if(req.body.collegeId)                                   //if collegeId is present in request body
+        {if (!isValidObjectId(req.body.collegeId))               //checking whether the collegeId is valid or not
                 return res.status(400).send({ status: false, msg: "Enter a valid collegeId" })
-            collegeEnter = req.body.collegeId;                      //getting collegeId from request body
         }
 
         //when college deleted=true once--
