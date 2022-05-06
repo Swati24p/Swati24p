@@ -41,10 +41,11 @@ const createCollege = async function (req, res) {
         if (!validlogoLink) {
             return res.status(404).send({ status: false, message: 'Invalid url' });
         }
-
+         
+        //college is ALREADY exist--
         let Name = await collegeModel.findOne({ name: req.body.name });
         if (Name) {
-            return res.status(400).send({ status: false, message: `${req.body.name} this college already exist` });
+            return res.status(409).send({ status: false, message: `${req.body.name} this college already exist` });
         }
 
         // data creation
@@ -84,7 +85,7 @@ const getCollegeDetails = async function (req, res) {
         if (Object.keys(getData).length === 0) {
             return res.status(404).send({ msg: "College not found" })
         }
-
+//for deletec--
         let deletedCollege = await collegeModel.findById(getData).select({ isDeleted: 1 })
         if (deletedCollege.isDeleted) {
             return res.status(404).send({ msg: "College is deleted" })
