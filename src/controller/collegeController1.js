@@ -21,8 +21,8 @@ const createCollege = async function (req, res) {
                 msg: "Invalid request parameters, data should be present for further request."
             });
         }
-        // required attributes
 
+        // required attributes
         if (!name) {
             return res.status(400).send({ status: false, msg: "name should be present in request body" })
         }
@@ -34,14 +34,15 @@ const createCollege = async function (req, res) {
         }
 
         //logolinkvalidation-
+        let reg = /^(https:\/\/www\.|http:\/\/www\.|www\.)[a-zA-Z0-9\-_.$]+\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/[^\s]*)?(.png|.jpeg|.jpg)$/gm
         const validlogoLink =
-            /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/.test(
+            reg.test(
                 req.body.logoLink
             );
         if (!validlogoLink) {
             return res.status(404).send({ status: false, message: 'Invalid url' });
         }
-         
+
         //college is ALREADY exist--
         let Name = await collegeModel.findOne({ name: req.body.name });
         if (Name) {
@@ -85,33 +86,33 @@ const getCollegeDetails = async function (req, res) {
         if (Object.keys(getData).length === 0) {
             return res.status(404).send({ msg: "College not found" })
         }
-//for deletec--
+        //for deletec--
         let deletedCollege = await collegeModel.findById(getData).select({ isDeleted: 1 })
         if (deletedCollege.isDeleted) {
             return res.status(404).send({ msg: "College is deleted" })
         }
 
-        let interns = await internModel.find({ collegeId: getData , isDeleted:false})
+        let interns = await internModel.find({ collegeId: getData, isDeleted: false })
         if (Object.keys(interns).length === 0) {
             return res.status(404).send({ msg: "Interns not found in college" })
         }
         let finalResult = await collegeModel.find({ name: collegeName }).collation({ locale: 'en', strength: 2 })
-        .select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
+            .select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
 
         // data creation
         const object = {
             name: finalResult[0].name,
             fullName: finalResult[0].fullName,
             logolink: finalResult[0].logoLink,
-            intrests: interns 
+            intrests: interns
         }
         return res.status(200).send({ data: object })
     }
     catch (error) {
-        res.status(500).send({ status: false,  msg: error.message })
+        res.status(500).send({ status: false, msg: error.message })
     }
 }
-  
+
 
 module.exports.createCollege = createCollege
 module.exports.getCollegeDetails = getCollegeDetails
