@@ -24,7 +24,7 @@ const createUser=async function (req,res){
           res.status(400).send({status:false,message:"invalid request parameters.plzz provide  user details"})
           return
       }
-      const{title,name,email,password,phone}=requestBody
+      const{title,name,email,password,phone,address}=requestBody
 
       if(!isValid(title)){
         res.status(400).send({status:false,message:"Title is required"})
@@ -73,6 +73,23 @@ const createUser=async function (req,res){
         if (!/^(\+\d{1,3}[- ]?)?\d{10}$/.test(phone)) {
             return res.status(400).send({ status: false, message: "Please enter valid 10 digit mobile number. " })
         }
+
+        // let document ={
+        //     title,
+        //     name,
+        //     email,
+        //     password,
+        //     phone
+
+        // }
+        const {street,city,pincode} = address
+
+        // if(address){
+        //     if (street){
+        //         if(typeof address.street == "string")
+        //     }
+
+        // }
 
         const phoneExt=await userModel.findOne({phone:phone})
         
