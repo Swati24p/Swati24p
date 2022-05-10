@@ -57,7 +57,7 @@ const createUser = async function (req, res) {
         const emailPattern = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})/
 
         if (!email.match(emailPattern)) {
-            return res.status(400).send({ status: false, msg: "This is not a valid email" })
+            return res.status(400).send({ status: false, message: "This is not a valid email" })
         }
 
         const emailExt = await userModel.findOne({ email: email })
@@ -92,22 +92,19 @@ const createUser = async function (req, res) {
         const { street, city, pincode } = address
 
         if (!/^[a-zA-Z]+$/.test(city)) {
-            return res.status(400).send({ status: false, msg: "city field have to fill by alpha characters" });
+            return res.status(400).send({ status: false, message: "city field have to fill by alpha characters" });
           }
-      
-        if (pincode.length > 6 || pincode.length < 6) {
-            return res.status(400).send({ status: false, message: "plzz enter valid pincode" })
-        }
-        if(typeof pincode === NaN){
-            return res.status(400).send({ status: false, message: "please mention pincode in numbers format only." })
-        }
+        
+        if (!/^\d{6}$/.test(pincode)) {
+            return res.status(400).send({ status: false, message: "plz enter valid pincode" });
+          }
 
         //Creation of data--
         let saveData = await userModel.create(requestBody)
         return res.status(201).send({ status: true, message: "success", data: saveData })
     }
     catch (err) {
-        return res.status(500).send({ status: "error", msg: err.message })
+        return res.status(500).send({ status: "error", message: err.message })
     }
 }
 
@@ -118,30 +115,30 @@ const createUser = async function (req, res) {
 const loginUser = async function (req, res) {
     try {
         const data = req.body;
-        if (!isValidRequestBody(data)) return res.status(400).send({ status: false, msg: "Please enter  mail and password" })
+        if (!isValidRequestBody(data)) return res.status(400).send({ status: false, message: "Please enter  mail and password" })
 
         const { email, password } = data
 
-        // validation for login
+        //validation for login
         if (!isValid(email)) {
-            return res.status(400).send({ status: false, msg: "please enter email" })
+            return res.status(400).send({ status: false, message: "please enter email" })
         }
 
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-            return res.status(400).send({ status: false, msg: "please enter valid email address" })
+            return res.status(400).send({ status: false, message: "please enter valid email address" })
         }
 
         if (!isValid(password)) {
-            return res.status(400).send({ status: false, msg: "please enter password" })
+            return res.status(400).send({ status: false, message: "please enter password" })
         }
-//pasword length should be min 8 and max 15 characters --
+        //pasword length should be min 8 and max 15 characters --
         if (password.length < 8 || password.length > 15) {
             return res.status(400).send({ status: false, message: "plzz enter valid password" })
         }
 
         let user = await userModel.findOne({ email, password });
         if (!user)
-            return res.status(404).send({ status: false, msg: "Please enter email address and password" });
+            return res.status(404).send({ status: false, message: "Please enter email address and password" });
 
         let token = jwt.sign(
             {
@@ -157,7 +154,7 @@ const loginUser = async function (req, res) {
     }
     catch (err) {
         console.log(err.message)
-        return res.status(500).send({ status: "error", msg: err.message })
+        return res.status(500).send({ status: "error", message: err.message })
     }
 }
 
