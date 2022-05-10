@@ -10,6 +10,7 @@ router.post("/login", userController.loginUser)
 
 // book api
 router.post("/books",book.createBook)
+router.delete("/books/:bookId",book.deleteBooks)
 
 
 
