@@ -111,14 +111,13 @@ const createBook = async (req, res) => {
 }
 
 
-//--------------------------------------------------GET /books-------------------------------------------------------//
+//--------------------------------------------------GET/books-------------------------------------------------------//
 
 const getBook = async (req, res) => {
   try {
+     let data = req.query
 
-    const data = req.query
-
-    const books = await bookModel.find({ isDeleted: false })
+    const books = await bookModel.find({ $and: [data, { isDeleted: false }] })
       .select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
       .sort({ 'title': 1 })
 
@@ -187,14 +186,7 @@ const deleteBooks = async (req, res) => {
     console.log(err.message)
     return res.status(500).send({ status: "error", msg: err.message })
   }
-
 }
-
-
-
-
-
-
 
 
 
