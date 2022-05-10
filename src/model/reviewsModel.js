@@ -32,7 +32,7 @@ const reviewModel = new mongoose.Schema({
         trim:true
     },
     isDeleted: {
-        type: boolean,
+        type: Boolean,
         default: false
     },
 

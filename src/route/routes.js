@@ -16,7 +16,7 @@ router.put("/books/:bookId",book.updateBooks)
 
 router.get("/books",book.getBook)
 
-router.post("/books/:bookId",book.booksById)
+router.get("/books/:bookId",book.booksById)
 
 router.delete("/books/:bookId",book.deleteBooks)
 
