@@ -1,65 +1,65 @@
-const mongoose=require('mongoose')
- 
-const ObjectId= mongoose.Schema.Types.ObjectId
+const mongoose = require('mongoose')
 
-const bookModel= new mongoose.Schema({
-     title:{
-         type:String,
-         required:true,
-         unique:true,
-         trim:true
-     },
-     excerpt:{
-         type:String,
-         required:true,
-         trim:true
-     },
+const ObjectId = mongoose.Schema.Types.ObjectId
 
-     userId:{
-         type:ObjectId,
-         required:true,
-         ref:'user',
-         trim:true
-     },
-     ISBN:{
-         type:String,
-         required:true,
-         unique:true,
-         trim:true
-     },
-     category:{
-         type:String,
-         required:true,
-         trim:true
-     },
-     subCategory:{
-         type:[String,
-         required:true,
-         trim:true
+const bookModel = new mongoose.Schema({
 
-     },
-     reviews:{
+    title: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    excerpt: {
+        type: String,
+        required: true,
+        trim: true
+    },
 
-        type:Number,
-        default:0,
-        required:true
+    userId: {
+        type: ObjectId,
+        required: true,
+        ref: 'user',
+        trim: true
+    },
+    ISBN: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    category: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    subcategory: {
+        type: [String],
+        required: true,
+        trim: true
 
-     },
-     deletedAt:{
-         type:Date,
-         default:false
-     },
+    },
+    reviews: {
+        type: Number,
+        default: 0,
+        required: true
 
-     releasedAt:{
+    },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
 
-         type:Date,
-         required:true
-     },
+    releasedAt: {
+
+        type: Date,
+        required: true
+    },
 
 
-
-
-
-
-},     {timestamps:true})
-module.exports=mongoose.model("Book",bookModel)
+}, { timestamps: true })
+module.exports = mongoose.model("Book", bookModel)
