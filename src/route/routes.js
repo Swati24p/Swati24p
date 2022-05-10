@@ -11,10 +11,12 @@ router.post("/login", userController.loginUser)
 
 //---------------------------------------------------BookApi------------------------------------------------------------//
 router.post("/books",book.createBook)
+router.put("/books/:bookId",book.updateBooks)
+
 
 router.get("/books",book.getBook)
 
-router.post("/books/:bookId",book.getBookbyparams)
+router.get("/books/:bookId",book.booksById)
 
 router.delete("/books/:bookId",book.deleteBooks)
 
