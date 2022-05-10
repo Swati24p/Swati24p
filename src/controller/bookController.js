@@ -131,4 +131,52 @@ catch(err){
 
 }
 
-module.exports ={createBook}
+
+
+
+// delete 
+const deleteBooks=async (req,res)=>{
+
+ try{
+      let id=req.params.bookId
+
+      if(!isValid.isValidObjectId(id)){
+
+        return res.status(400).send({status:false, message:"please enter valid id"})
+      }
+      
+      const findBook=await bookModel.findById({_id:id})
+      if(!findBook){
+          return res.status(404).send({status:false,message:'No book found'})
+      }
+      
+
+      else if(findBook.isDeleted==true){
+
+        return res.status(400).send({status:false,message:"book has been already deleted"})
+      }
+
+      else{
+
+        let deleteData=await bookModel.findOneAndUpdate({_id:id}, {isDeleted:true, deletedAt:Date.now()}  ,{new:true})
+        return res.status(200).send({status:true,message:"deleted",data:deleteData})
+      }
+      
+ }
+
+ catch(err){
+    console.log(err.message)
+        return res.status(500).send({ status: "error", msg: err.message })
+}
+
+}
+
+
+
+
+
+
+
+
+
+module.exports ={createBook,deleteBooks}
