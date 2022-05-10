@@ -4,8 +4,9 @@ const userController = require("../controller/userController")
 const login = require("../controller/login")
 
 
-router.post('/register', userController.createUser) 
-router.post("/login",login.loginUser)
+router.post('/register', userController.createUser)
+ 
+router.post("/login", login.loginUser)
 
 
 

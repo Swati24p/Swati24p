@@ -5,13 +5,14 @@ const userSchema = new mongoose.Schema({
         type:String, 
         required:true,
         enum:["Mr", "Mrs", "Miss"],
-
     },
+
     name: {
         type:String, 
         required:true,
         trim: true
     },
+    
     phone: {
         type: String, 
         required: true, 
@@ -30,8 +31,7 @@ const userSchema = new mongoose.Schema({
         type: String, 
         required:true,
         trim: true, 
-        // minLen 8, 
-        // maxLen 15
+       
     },
 
     address: {
