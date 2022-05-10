@@ -140,7 +140,7 @@ const deleteBooks=async (req,res)=>{
  try{
       let id=req.params.bookId
 
-      if(!isValid.isValidObjectId(id)){
+      if(!isValid(id)){
 
         return res.status(400).send({status:false, message:"please enter valid id"})
       }
