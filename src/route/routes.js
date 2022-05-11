@@ -17,6 +17,8 @@ router.get("/books/:bookId",book.getBooksByParams)
 router.put("/books/:bookId",book.updateBooks)
 router.delete("/books/:bookId",book.deleteBooks)
 
+router.delete("/books/:bookId/review/:reviewId",review.deleteReview)
+
 
 router.post("/books/:bookId/review",review.createReview)
 

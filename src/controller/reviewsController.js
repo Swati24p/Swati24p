@@ -74,7 +74,57 @@ const createReview = async function (req, res) {
 }
 
 
-module.exports = { createReview }
+
+
+
+
+//delete api
+
+
+const deleteReview=async(req,res)=>{
+
+try{
+
+const reviewId=req.params.reviewId
+const bookId=req.params.bookId
+
+if(!isValidObjectId(bookId)){
+    return res.status(400).send({status:false,message:"plzz enter valid book id"})
+}
+if(!isValidObjectId(reviewId)){
+    return res.status(400).send({status:false,message:"plzz enter valid review id"})
+}
+const review=await reviewsModel.findById(reviewId)
+if(!review){
+    return res.status(404).send({status:false,message:"No review exists "})
+}
+if(review.isDeleted==true){
+    return res.status(404).send({status:false,message:"review already deleted"})
+}
+
+const book = await bookModel.findById(bookId)
+if(!book){
+
+    return res.status(404).send({status:false,message:"No book Exists"})
+}
+if(book.isDeleted==true){
+    return res.status(400).send({status:false,message:"book already deleted"})
+}
+ let deleteReview=await reviewsModel.findOneAndUpdate({_id:reviewId},{$set:{isDeleted:true},deletedAt:Date.now()},{new:true,upsert:true})
+
+if(deleteReview) {await bookModel.findOneAndUpdate({_id:bookId},{$inc:{review:-1}},{new:true,upsert:true})}
+
+}
+
+catch (err) {
+    console.log(err.message)
+    return res.status(500).send({ status: "error", msg: err.message })
+}
+
+}
+
+
+module.exports = { createReview,deleteReview }
 
 
 
