@@ -90,7 +90,7 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: false, message: " subcategory should be array" })
     }
     if (Array.isArray(subcategory))
-      if (subcategory.some(x => x.trim().length === 0)) {
+      if (subcategory.some(x => typeof x === "string" &&x.trim().length === 0)) {
         return res.status(400).send({ status: false, message: " subcategory should not be empty or with white spaces" })
       }
 
@@ -143,15 +143,15 @@ const getBook = async (req, res) => {
 
 const booksById = async (req, res) => {
   try {
-    let bookId = req.params.bookId
-    console.log(bookId)
+    const bookId = req.params.bookId
+    
 
     // bookId validation
 
     if (!isValidObjectId(bookId)) {
       return res.status(400).send({ status: false, message: "plz enter valid BookId" })
     }
-    let checkBook = await bookModel.findOne({ _id: bookId,isDeleted:false}).lean()
+    let checkBook = await bookModel.findOne({_id: bookId,isDeleted:false}).lean()
     console.log(checkBook)
 
     if (!checkBook) {
@@ -192,16 +192,13 @@ const deleteBooks = async (req, res) => {
       return res.status(404).send({ status: false, message: 'No book found' })
     }
 
-    // else if (findBook.isDeleted == true) {
-
-    //   return res.status(400).send({ status: false, message: "book has been already deleted" })
-    // }
+   
 
 
     let deleteData = await bookModel.findOneAndUpdate({ _id: id },
       { $set: { isDeleted: true, deletedAt: Date.now() } },
       { new: true })
-    return res.status(200).send({ status: true, message: "deleted", data: deleteData })
+    return res.status(200).send({ status: true, message: "deleted sucessfully"})
 
 
   }
@@ -229,9 +226,9 @@ const updateBooks = async function (req, res) {
       return res.status(404).send({ status: false, message: "No Book Found" })
     }
 
-    let x = (!title || !excerpt || !releasedAt || !ISBN)
+    let x = (!title && !excerpt && !releasedAt && !ISBN)
     if (!isValidRequestBody(data) || x) {
-      return res.status(400).send({ status: false, message: "plz enter some data for updation" })
+      return res.status(400).send({ status: false, message: "plz enter valid data for updation" })
 
     }
 
