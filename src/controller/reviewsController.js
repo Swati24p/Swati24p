@@ -32,15 +32,25 @@ const isValidObjectId = (value) => {
 const createReview = async function (req, res) {
 
     try {
+
         let data = req.body
         let bookId = req.params.bookId
+
+        //validation for blank body --
         if (Object.keys(data).length == 0 || data == null) {
-            return res.status(400).send({ status: false, message: "No details provided by user" })
+            return res.status(400).send({ status: false, message: "reviews block can'nt be empty" })
         }
-        let check = await bookModel.findOne({ bookId: bookId, isDeleted: false })
+
+        // check Attributes validations--
+        let check = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!check) {
             return res.status(404).send({ status: false, message: "book document does'nt exist" })
         }
+
+        if (!(isValidObjectId(bookId))) {
+            return res.status(400).send({ status: false, message: "Please enter valid bookId" })
+        }
+
 
         const { review, reviewedBy, rating } = data
 
@@ -61,11 +71,18 @@ const createReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "please mention the rating in between 1 to 5" })
         }
 
-        data["reviewedAt"] = Date.now()
-        data["bookId"] = bookId
+        // data["reviewedAt"] = Date.now()
+        // data["bookId"] = bookId
 
-        const saveReview = await reviewsModel.create(data)
-        return res.status(201).send({ status: true, message: 'Success', data: saveReview })
+        // check.reviews = check.reviews + 1
+        // check.save()
+
+        // let Review1 = await bookModel.findByIdAndUpdate({ bookId: bookId},{$inc:1})
+
+        // Object.assign(check._doc, { reviewsData: [Review1] });
+        // console.log(check._doc)
+
+        return res.status(201).send({ status: true, message: 'Success', data: check })
     }
     catch (err) {
         console.log(err.message)

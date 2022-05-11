@@ -11,14 +11,20 @@ router.post('/register', userController.createUser)
 router.post("/login", userController.loginUser)
 
 //---------------------------------------------------BookApi------------------------------------------------------------//
-router.post("/books",book.createBook)
-router.get("/books",book.getBook)
-router.get("/books/:bookId",book.getBooksByParams)
-router.put("/books/:bookId",book.updateBooks)
-router.delete("/books/:bookId",book.deleteBooks)
 
+router.post("/books", book.createBook)
 
-router.post("/books/:bookId/review",review.createReview)
+router.get("/books", book.getBook)
+
+router.get("/books/:bookId", book.getBooksByParams)
+
+router.put("/books/:bookId", book.updateBooks)
+
+router.delete("/books/:bookId", book.deleteBooks)
+
+//---------------------------------------------------ReviewApi------------------------------------------------------------//
+
+router.post("/books/:bookId/review", review.createReview)
 
 
 
