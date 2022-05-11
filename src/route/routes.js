@@ -26,6 +26,13 @@ router.delete("/books/:bookId", book.deleteBooks)
 
 router.post("/books/:bookId/review", review.createReview)
 
+router.put("/books/:bookId/review/:reviewId",review.updateReview)
+
+router.delete("/books/:bookId/review/:reviewId",review.deleteReview)
+
+
+
+
 
 
 
