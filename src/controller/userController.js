@@ -3,10 +3,12 @@ const jwt = require("jsonwebtoken");
 
 //-----------------------------------------------basic Validations-------------------------------------------------------------//
 
+//check for the requestbody cannot be empty --
 const isValidRequestBody = function (value) {
     return Object.keys(value).length > 0
 }
 
+//validaton check for the type of Value --
 const isValid = (value) => {
     if (typeof value == 'undefined' || typeof value == null) return false;
     if (typeof value == 'string' && value.trim().length == 0) return false;
@@ -14,7 +16,7 @@ const isValid = (value) => {
 }
 
 const isValidTitle = function (title) {
-    return ['Mr', 'Mrs', 'Miss'].indexOf(title) != -1
+    return ['Mr', 'Mrs', 'Miss'].indexOf(title) != -1      //check for the enum value which is does'nt exist
 }
 
 
