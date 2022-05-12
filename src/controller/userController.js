@@ -62,6 +62,7 @@ const createUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "This is not a valid email" })
         }
 
+        email= email.toLowerCase().trim()
         const emailExt = await userModel.findOne({ email: email })
         if (emailExt) {
             return res.status(409).send({ status: false, message: "Email already exists" })
@@ -126,9 +127,10 @@ const loginUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "please enter email" })
         }
 
-        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.toLowerCase().trim())) {
             return res.status(400).send({ status: false, message: "please enter valid email address" })
         }
+        //email = email.trim()
 
         if (!isValid(password)) {
             return res.status(400).send({ status: false, message: "please enter password" })
@@ -138,7 +140,7 @@ const loginUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "plzz enter valid password" })
         }
 
-        let user = await userModel.findOne({ email, password });
+        let user = await userModel.findOne({  email, password });
         if (!user)
             return res.status(404).send({ status: false, message: "Please enter email address and password" });
 
@@ -146,13 +148,13 @@ const loginUser = async function (req, res) {
             {
                 userId: user._id.toString(),
                 iat: Math.floor(Date.now() / 1000),
-                exp: Math.floor(Date.now() / 1000) + 10 * 2 * 60
+                exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60
             },
             "project-3"
         );
 
         res.setHeader("x-api-key", token);
-        return res.status(200).send({ status: true, message: "success", data: token });
+        return res.status(200).send({ status: true, message: "token successfully Created", token: token });
     }
     catch (err) {
         console.log(err.message)
