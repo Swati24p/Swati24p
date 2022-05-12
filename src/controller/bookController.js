@@ -31,8 +31,8 @@ const createBook = async (req, res) => {
 
   try {
     const data = req.body
-    if (Object.keys(data).length == 0 || data == null) {
-      return res.status(400).send({ status: false, message: "No details provided by user" })
+    if (!isValidRequestBody(data)) {
+      return res.status(400).send({ status: false, message: "plz enter some data" })
     }
 
     const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = data
@@ -56,7 +56,7 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: false, message: " title is required" })
 
     }
-    const titleCheck = await bookModel.findOne({ title: title })
+    const titleCheck = await bookModel.findOne({ title: title }).collation({ locale: 'en', strength: 2 })
     if (titleCheck) {
       return res.status(400).send({ status: false, message: " this title already exist " })
     }
@@ -121,20 +121,48 @@ const createBook = async (req, res) => {
 const getBook = async (req, res) => {
   try {
       let data = req.query
-      let { userId, category, subcategory } = data
-      let query = { userId, category, subcategory }
+      
+     
+       let filter ={ isDeleted:false }
 
-      if(! isValidRequestBody (query)){
-        return res.status(400).send({ status: false, message: "plz enter valid query params" })
-    }
  
-    let books = await bookModel.find({ $and: [data, { isDeleted: false }] })
+  if(isValidRequestBody(data))
+
+  
+    {
+      const { userId, category, subcategory } = data
+      if(!(userId||category||subcategory)){
+        return res.status(400).send({ status: false, message: "plz enter valid filter" })
+
+      }
+      
+
+      if(isValidObjectId(userId)){
+        filter["userId"]=userId
+      }
+      
+    
+  
+      if(isValid(category)){
+      filter["category"]=category
+      }
+    
+
+    if(isValid(subcategory)){
+      const subcategoryData = subcategory.trim().split(",").map(x=>x.trim())
+      filter["subcategory"]={$all:subcategoryData}
+  }
+}
+ 
+    let books = await bookModel.find(filter).collation({ locale: 'en', strength: 2 })
       .select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
       .sort({ 'title': 1 })
   
-    if (books.length == 0)
-      return res.status(404).send({ status: false, msg: "No books Available." })
-    return res.status(200).send({ status: true, count: books.length, msg: 'book list', data: books });
+     
+    if (!books.length)
+      return res.status(404).send({ status: false, message: "No books Available." })
+
+    return res.status(200).send({ status: true, count: books.length, message: 'book list', data: books });
   }
 
  catch (error) {
@@ -165,13 +193,13 @@ const getBooksByParams = async (req, res) => {
       return res.status(404).send({ status: false, message: "book not found " })
     }
     // data from reviewModel
-    let reviewCheck = await reviewModel.find({ bookId: bookId })
+    let reviewCheck = await reviewModel.find({ bookId: bookId ,isDeleted:false})
 
     // adding reviewsData in bookData
 
     checkBook["reviewsData"] = reviewCheck
 
-    console.log(checkBook)
+    
     return res.status(200).send({ status: true, message: 'Books list', data: checkBook })
 
   }
@@ -199,7 +227,7 @@ const updateBooks = async function (req, res) {
       return res.status(404).send({ status: false, message: "No Book Found" })
     }
 
-    let x = (!title && !excerpt && !releasedAt && !ISBN)
+    let x = (!(title||excerpt ||releasedAt ||ISBN))
     if (!isValidRequestBody(data) || x) {
       return res.status(400).send({ status: false, message: "plz enter valid data for updation" })
 

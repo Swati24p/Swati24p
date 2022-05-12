@@ -33,7 +33,7 @@ const createUser = async function (req, res) {
         }
 
         //Validate attributes --
-        const { title, name, email, password, phone, address } = requestBody
+        let { title, name, email, password, phone, address } = requestBody
 
         if (!isValid(title)) {
             res.status(400).send({ status: false, message: "Title is required" })
@@ -92,7 +92,7 @@ const createUser = async function (req, res) {
         }
 
         //for address--
-        const { street, city, pincode } = address
+        let { street, city, pincode } = address
 
         if (!/^[a-zA-Z]+$/.test(city)) {
             return res.status(400).send({ status: false, message: "city field have to fill by alpha characters" });
