@@ -51,6 +51,11 @@ const createBook = async (req, res) => {
       return res.status(404).send({ status: false, message: "user not defined " })
     }
 
+    let tokenUserId =req["userId"]
+    if(tokenUserId!=userId){
+      return res.status(401).send({status:false,message:"you are unauthorized to access this data "})
+    }
+
     //   title validation
     if (!isValid(title)) {
       return res.status(400).send({ status: false, message: " title is required" })
@@ -218,6 +223,7 @@ const updateBooks = async function (req, res) {
     let bookId = req.params.bookId
     let data = req.body
     let { title, excerpt, releasedAt, ISBN } = data
+    let tokenUserId =req["userId"]
 
     if (!isValidObjectId(bookId)) {
       return res.status(400).send({ status: false, message: "plz enter valid BookId" })
@@ -225,6 +231,11 @@ const updateBooks = async function (req, res) {
     let book = await bookModel.findOne({ _id: bookId, isDeleted: false })
     if (!book) {
       return res.status(404).send({ status: false, message: "No Book Found" })
+    }
+
+    let userId= book.userId
+    if(tokenUserId!=userId){
+      return res.status(401).send({status:false,message:"you are unauthorized to access this data "})
     }
 
     let x = (!(title||excerpt ||releasedAt ||ISBN))
@@ -276,17 +287,27 @@ const deleteBooks = async (req, res) => {
   try {
     let id = req.params.bookId
 
+    const tokenUserId=req["userId"]
+
     if (!isValidObjectId(id)) {
 
       return res.status(400).send({ status: false, message: "please enter valid id" })
     }
 
     const findBook = await bookModel.findOne({ _id: id, isDeleted: false })
+
+
     if (!findBook) {
       return res.status(404).send({ status: false, message: 'No book found' })
     }
 
-    let deleteData = await bookModel.findOneAndUpdate({ _id: id },
+    let userId = findBook.userId
+
+    if(tokenUserId!=userId){
+      return res.status(401).send({status:false,message:"you are unauthorized to access this data "})
+    }
+   
+     await bookModel.findOneAndUpdate({ _id: id },
       { $set: { isDeleted: true, deletedAt: Date.now() } },
       { new: true })
     return res.status(200).send({ status: true, message: "deleted sucessfully"})

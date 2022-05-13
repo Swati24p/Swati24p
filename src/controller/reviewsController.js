@@ -17,10 +17,7 @@ const isValid = (value) => {
     // if(typeof value !== "string") return false;
     return true
 }
-const isValidDate = (value) => {
-    if (typeof value == 'undefined' || typeof value == null) return false;
-    return true
-}
+
 
 const isValidObjectId = (value) => {
     return mongoose.isValidObjectId(value)
@@ -53,6 +50,7 @@ const createReview = async function (req, res) {
 
 
         const { review, reviewedBy, rating } = data
+        
 
         // review validation
         if (!isValid(review)) {
@@ -73,7 +71,7 @@ const createReview = async function (req, res) {
         data["bookId"] = bookId
 
 
-         await reviewsModel.create(data)
+        let reviewsData = await reviewsModel.create(data)
 
 
         let book = await bookModel.findByIdAndUpdate( bookId ,
@@ -81,7 +79,7 @@ const createReview = async function (req, res) {
             { new: true }).lean()
 
 
-        let reviewsData = await reviewsModel.find({ bookId: bookId ,isDeleted:false})
+        await reviewsModel.find({ bookId: bookId ,isDeleted:false})
         book["reviewData"] = reviewsData
 
         return res.status(201).send({ status: true, message: 'Success', data: book })
@@ -140,11 +138,11 @@ const updateReview = async (req, res) => {
             }
         }
 
-        await reviewsModel.findByIdAndUpdate({ _id: reviewId },
+        const reviewData = await reviewsModel.findByIdAndUpdate({ _id: reviewId },
             { $set: { rating: rating, reviewedBy: reviewedBy, review: review } },
             { new: true })
 
-        const reviewData = await reviewsModel.find({ bookId: bookId })
+        await reviewsModel.find({ bookId: bookId })
 
         checkBookId["reviewData"] = reviewData
 
