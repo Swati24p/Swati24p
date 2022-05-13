@@ -16,10 +16,7 @@ const isValid = (value) => {
   if (typeof value == 'string' && value.trim().length == 0) return false;
   return true
 }
-const isValidDate = (value) => {
-  if (typeof value == 'undefined' || typeof value == null) return false;
-  return true
-}
+
 
 const isValidObjectId = (value) => {
   return mongoose.isValidObjectId(value)
@@ -91,7 +88,7 @@ const createBook = async (req, res) => {
     // subcategory validation
 
     if (!isValid(subcategory)) {
-      return res.status(400).send({ status: false, message: " subcategory should be array" })
+      return res.status(400).send({ status: false, message: " subcategory is required" })
     }
     if (Array.isArray(subcategory))
       if (subcategory.some(x => typeof x === "string" &&x.trim().length === 0)) {
@@ -100,7 +97,7 @@ const createBook = async (req, res) => {
 
 
     // date validation
-    if (!isValidDate(releasedAt)) {
+    if (!isValid(releasedAt)) {
       return res.status(400).send({ status: false, message: " released date is required" })
     }
 

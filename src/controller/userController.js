@@ -12,12 +12,15 @@ const isValidRequestBody = function (value) {
 const isValid = (value) => {
     if (typeof value == 'undefined' || typeof value == null) return false;
     if (typeof value == 'string' && value.trim().length == 0) return false;
+    if (typeof value != 'string')return false
     return true
 }
 
 const isValidTitle = function (title) {
     return ['Mr', 'Mrs', 'Miss'].indexOf(title) != -1      //check for the enum value which is does'nt exist
 }
+
+
 
 
 //-------------------------------------------------API-1 [/register]--------------------------------------------------//
@@ -36,7 +39,7 @@ const createUser = async function (req, res) {
         let { title, name, email, password, phone, address } = requestBody
 
         if (!isValid(title)) {
-            res.status(400).send({ status: false, message: "Title is required" })
+            res.status(400).send({ status: false, message: " Valid Title is required" })
             return
         }
         if (!isValidTitle(title)) {
@@ -92,16 +95,23 @@ const createUser = async function (req, res) {
         }
 
         //for address--
-        let { street, city, pincode } = address
-
-        if (!/^[a-zA-Z]+$/.test(city)) {
-            return res.status(400).send({ status: false, message: "city field have to fill by alpha characters" });
-          }
         
-        if (!/^\d{6}$/.test(pincode)) {
-            return res.status(400).send({ status: false, message: "plz enter valid pincode" });
-          }
+        if(address){
+            if(typeof value !="object"){
+                return res.status(400).send({ status: false, message: "address should be an object" })
+            }
+            let { street, city, pincode } = address
 
+            if (!/^[a-zA-Z]+$/.test(city)) {
+                return res.status(400).send({ status: false, message: "city field have to fill by alpha characters" });
+              }
+            
+            if (!/^\d{6}$/.test(pincode)) {
+                return res.status(400).send({ status: false, message: "plz enter valid pincode" });
+              }
+    
+        }
+     
         //Creation of data--
         let saveData = await userModel.create(requestBody)
         return res.status(201).send({ status: true, message: "success", data: saveData })
@@ -148,7 +158,8 @@ const loginUser = async function (req, res) {
             {
                 userId: user._id.toString(),
                 iat: Math.floor(Date.now() / 1000),
-                exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60
+                exp: Math.floor(Date.now() / 1000) + 10 * 60* 1
+                // 
             },
             "project-3"
         );
@@ -162,5 +173,5 @@ const loginUser = async function (req, res) {
 }
 
 
-module.exports.loginUser = loginUser;
-module.exports.createUser = createUser;
+module.exports= {loginUser,createUser};
+
