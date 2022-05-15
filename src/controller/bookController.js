@@ -2,6 +2,7 @@ const userModel = require('../model/userModel')
 const bookModel = require('../model/bookModel')
 const reviewModel = require("../model/reviewsModel")
 const mongoose = require("mongoose")
+const moment=require("moment")
 
 
 
@@ -16,7 +17,6 @@ const isValid = (value) => {
   if (typeof value == 'string' && value.trim().length == 0) return false;
   return true
 }
-
 
 const isValidObjectId = (value) => {
   return mongoose.isValidObjectId(value)
@@ -101,7 +101,7 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: false, message: " released date is required" })
     }
 
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(releasedAt)) {
+    if (!moment(releasedAt,"YYYY-MM-DD",true).isValid()) {
       return res.status(400).send({ status: false, message: " plz enter valid date" })
 
     }
@@ -243,7 +243,7 @@ const updateBooks = async function (req, res) {
 
     if (title) {
 
-      const titleCheck = await bookModel.findOne({ title: title.trim() })
+      const titleCheck = await bookModel.findOne({ title: title.trim() }).collation({ locale: 'en', strength: 2 })
       if (titleCheck) {
         return res.status(400).send({ status: false, message: " this title already exist " })
       }
@@ -260,7 +260,7 @@ const updateBooks = async function (req, res) {
     }
 
     if (releasedAt)
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(releasedAt)) {
+      if (!moment(releasedAt,"YYYY-MM-DD",true).isValid()) {
         return res.status(400).send({ status: false, message: " plz enter valid date" })
       }
 

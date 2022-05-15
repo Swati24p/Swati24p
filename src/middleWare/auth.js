@@ -16,11 +16,11 @@ const validateToken = async function (req, res, next) {
     try {
         let token = req.headers['x-Api-Key'] || req.headers['x-api-key']
         if (!token) {
-           return res.status(401).send({ status: false, msg: "token must be present" });
+           return res.status(401).send({ status: false, message: "token must be present" });
         }
-       let decodedToken =authToken(token)
+       let decodedToken = authToken(token)
        if(!decodedToken){
-           return res.status(401).send({status:false,msg:"inavlid token"})
+           return res.status(401).send({status:false,message:"inavlid token"})
        }
         console.log(decodedToken)
         

@@ -22,6 +22,14 @@ const isValid = (value) => {
 const isValidObjectId = (value) => {
     return mongoose.isValidObjectId(value)
 }
+const isValidReview = (value) => {
+    
+    if (typeof value == 'string' && value.trim().length == 0) return false;
+    
+    return true
+}
+
+
 
 
 
@@ -66,6 +74,12 @@ const createReview = async function (req, res) {
         if (typeof rating !== "number" || (rating < 1 || rating > 5)) {
             return res.status(400).send({ status: false, message: "please enter valid rating in between 1 to 5" })
         }
+
+        if (!isValidReview(reviewedBy)){
+            return res.status(400).send({ status: false, message: "reviewer's name  is required" })
+        }
+
+
 
         data["reviewedAt"] = Date.now()
         data["bookId"] = bookId
