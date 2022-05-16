@@ -8,16 +8,19 @@ const moment = require("moment")
 
 //-----------------------------------------------basic validations---------------------------------------------------//
 
+//check for the requestbody cannot be empty --
 const isValidRequestBody = function (value) {
   return Object.keys(value).length > 0
 }
 
+//validaton check for the type of Value --
 const isValid = (value) => {
   if (typeof value == 'undefined' || value == null) return false;
   if (typeof value == 'string' && value.trim().length == 0) return false;
   return true
 }
 
+//check wheather objectId is valid or not--
 const isValidObjectId = (value) => {
   return mongoose.isValidObjectId(value)
 }
@@ -28,6 +31,7 @@ const createBook = async (req, res) => {
 
   try {
     const data = req.body
+    //check for the requestbody cannot be empty --
     if (!isValidRequestBody(data)) {
       return res.status(400).send({ status: false, message: "plz enter some data" })
     }
@@ -35,10 +39,12 @@ const createBook = async (req, res) => {
     const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = data
 
     // userId validation
+    //validaton check for the type of Value --
     if (!isValid(userId)) {
       return res.status(400).send({ status: false, message: " userId is required" })
 
     }
+    //check wheather objectId is valid or not--
     if (!isValidObjectId(userId)) {
       return res.status(400).send({ status: false, message: "plz enter valid userId" })
     }
@@ -54,6 +60,7 @@ const createBook = async (req, res) => {
     }
 
     //   title validation
+    //validaton check for the type of Value --
     if (!isValid(title)) {
       return res.status(400).send({ status: false, message: " title is required" })
 
@@ -63,11 +70,13 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: false, message: " this title already exist " })
     }
     //   excerpt validation
+    //validaton check for the type of Value --
     if (!isValid(excerpt)) {
       return res.status(400).send({ status: false, message: " excerpt is required" })
     }
 
     //   ISBN validation
+    //validaton check for the type of Value --
     if (!isValid(ISBN)) {
       return res.status(400).send({ status: false, message: " ISBN is required" })
 
@@ -81,12 +90,12 @@ const createBook = async (req, res) => {
     }
 
     //   category validation
-
+//validaton check for the type of Value --
     if (!isValid(category)) {
       return res.status(400).send({ status: false, message: " category is required" })
     }
     // subcategory validation
-
+//validaton check for the type of Value --
     if (!isValid(subcategory)) {
       return res.status(400).send({ status: false, message: " subcategory is required" })
     }
@@ -97,15 +106,18 @@ const createBook = async (req, res) => {
 
 
     // date validation
+    //validaton check for the type of Value --
     if (!isValid(releasedAt)) {
       return res.status(400).send({ status: false, message: " released date is required" })
     }
 
+    //date validation by using moment--
     if (!moment(releasedAt, "YYYY-MM-DD", true).isValid()) {
       return res.status(400).send({ status: false, message: " plz enter valid date" })
 
     }
 
+    //data creation--
     const saveBook = await bookModel.create(data)
     return res.status(201).send({ status: true, message: 'Success', data: saveBook })
 
@@ -124,10 +136,10 @@ const getBook = async (req, res) => {
   try {
     let data = req.query
 
-
+    //add filter--
     let filter = { isDeleted: false }
 
-
+//check for the requestbody cannot be empty --
     if (isValidRequestBody(data)) {
       const { userId, category, subcategory } = data
       if (!(userId || category || subcategory)) {
@@ -135,32 +147,35 @@ const getBook = async (req, res) => {
 
       }
 
-
+//check wheather objectId is valid or not--
       if (isValidObjectId(userId)) {
         filter["userId"] = userId
       }
 
 
-
+//validaton check for the type of Value --
       if (isValid(category)) {
         filter["category"] = category
       }
 
-
+//validaton check for the type of Value --
       if (isValid(subcategory)) {
         const subcategoryData = subcategory.trim().split(",").map(x => x.trim())
         filter["subcategory"] = { $all: subcategoryData }
       }
     }
 
+    //select response keys for res.body
     let books = await bookModel.find(filter).collation({ locale: 'en', strength: 2 })
       .select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
       .sort({ 'title': 1 })
 
 
+    //validation when no book exist--
     if (!books.length)
       return res.status(404).send({ status: false, message: "No books Available." })
 
+//data creation
     return res.status(200).send({ status: true, count: books.length, message: 'book list', data: books });
   }
 
@@ -179,13 +194,12 @@ const getBooksByParams = async (req, res) => {
   try {
     const bookId = req.params.bookId
 
-
     // bookId validation
-
+//check wheather objectId is valid or not--
     if (!isValidObjectId(bookId)) {
       return res.status(400).send({ status: false, message: "plz enter valid BookId" })
     }
-    let checkBook = await bookModel.findOne({ _id: bookId, isDeleted: false }).lean()
+    let checkBook = await bookModel.findOne({ _id: bookId, isDeleted: false }).lean()   //it(.lean()) returns plain js Objects except mongoose objects
     console.log(checkBook)
 
     if (!checkBook) {
@@ -194,7 +208,7 @@ const getBooksByParams = async (req, res) => {
     // data from reviewModel
     let reviewCheck = await reviewModel.find({ bookId: bookId, isDeleted: false })
 
-    // adding reviewsData in bookData
+    // adding reviewsData key in bookData
 
     checkBook["reviewsData"] = reviewCheck
 
@@ -219,6 +233,7 @@ const updateBooks = async function (req, res) {
     let { title, excerpt, releasedAt, ISBN } = data
     let tokenUserId = req["userId"]
 
+//check wheather objectId is valid or not--
     if (!isValidObjectId(bookId)) {
       return res.status(400).send({ status: false, message: "plz enter valid BookId" })
     }
@@ -233,6 +248,7 @@ const updateBooks = async function (req, res) {
     }
 
     let x = (!(title || excerpt || releasedAt || ISBN))
+ //check for the requestbody cannot be empty --
     if (!isValidRequestBody(data) || x) {
       return res.status(400).send({ status: false, message: "plz enter valid data for updation" })
 
@@ -240,7 +256,7 @@ const updateBooks = async function (req, res) {
 
     if (title) {
 
-      const titleCheck = await bookModel.findOne({ title: title.trim() }).collation({ locale: 'en', strength: 2 })
+      const titleCheck = await bookModel.findOne({ title: title.trim() }).collation({ locale: 'en', strength: 2 })  //collation uses to make title case insestive 
       if (titleCheck) {
         return res.status(400).send({ status: false, message: " this title already exist " })
       }
@@ -283,6 +299,7 @@ const deleteBooks = async (req, res) => {
 
     const tokenUserId = req["userId"]
 
+//check wheather objectId is valid or not--
     if (!isValidObjectId(id)) {
 
       return res.status(400).send({ status: false, message: "please enter valid id" })

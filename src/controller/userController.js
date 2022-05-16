@@ -144,6 +144,7 @@ const loginUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "please enter email" })
         }
 
+        //Email format Validation--
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.toLowerCase().trim())) {
             return res.status(400).send({ status: false, message: "please enter valid email address" })
         }
@@ -157,20 +158,20 @@ const loginUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "plzz enter valid password" })
         }
 
+        //find data from userModel--
         let user = await userModel.findOne({ email, password });
         if (!user)
             return res.status(404).send({ status: false, message: "Please enter email address and password" });
 
+        //token generation--
         let token = jwt.sign(
             {
                 userId: user._id.toString(),
-                iat: Math.floor(Date.now() / 1000),
-                exp: Math.floor(Date.now() / 1000) + 10 * 2 * 60
-                // 
+                //this is the payload data to jwt token it will validate the issue at and exp time with particular userId. 
             },
-            "project-3"
+            "project-3",{expiresIn: "3600s"}
         );
-
+        
         return res.status(200).send({ status: true, message: "token successfully Created", token: token });
     }
     catch (err) {
