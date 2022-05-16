@@ -23,9 +23,9 @@ const isValidObjectId = (value) => {
     return mongoose.isValidObjectId(value)
 }
 const isValidReview = (value) => {
-    
+
     if (typeof value == 'string' && value.trim().length == 0) return false;
-    
+
     return true
 }
 
@@ -53,12 +53,12 @@ const createReview = async function (req, res) {
         if (!isValidRequestBody(data)) {
             return res.status(400).send({ status: false, message: "No details provided by user" })
         }
-       
-       
+
+
 
 
         const { review, reviewedBy, rating } = data
-        
+
 
         // review validation
         if (!isValid(review)) {
@@ -75,7 +75,7 @@ const createReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "please enter valid rating in between 1 to 5" })
         }
 
-        if (!isValidReview(reviewedBy)){
+        if (!isValidReview(reviewedBy)) {
             return res.status(400).send({ status: false, message: "reviewer's name  is required" })
         }
 
@@ -88,12 +88,12 @@ const createReview = async function (req, res) {
         let reviewsData = await reviewsModel.create(data)
 
 
-        let book = await bookModel.findByIdAndUpdate( bookId ,
+        let book = await bookModel.findByIdAndUpdate(bookId,
             { $inc: { reviews: 1 } },
             { new: true }).lean()
 
 
-        await reviewsModel.find({ bookId: bookId ,isDeleted:false})
+        await reviewsModel.find({ bookId: bookId, isDeleted: false })
         book["reviewData"] = reviewsData
 
         return res.status(201).send({ status: true, message: 'Success', data: book })

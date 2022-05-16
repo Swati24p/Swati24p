@@ -2,7 +2,7 @@ const userModel = require('../model/userModel')
 const bookModel = require('../model/bookModel')
 const reviewModel = require("../model/reviewsModel")
 const mongoose = require("mongoose")
-const moment=require("moment")
+const moment = require("moment")
 
 
 
@@ -48,9 +48,9 @@ const createBook = async (req, res) => {
       return res.status(404).send({ status: false, message: "user not defined " })
     }
 
-    let tokenUserId =req["userId"]
-    if(tokenUserId!=userId){
-      return res.status(401).send({status:false,message:"you are unauthorized to access this data "})
+    let tokenUserId = req["userId"]
+    if (tokenUserId != userId) {
+      return res.status(401).send({ status: false, message: "you are unauthorized to access this data " })
     }
 
     //   title validation
@@ -91,7 +91,7 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: false, message: " subcategory is required" })
     }
     if (Array.isArray(subcategory))
-      if (subcategory.some(x => typeof x === "string" &&x.trim().length === 0)) {
+      if (subcategory.some(x => typeof x === "string" && x.trim().length === 0)) {
         return res.status(400).send({ status: false, message: " subcategory should not be empty or with white spaces" })
       }
 
@@ -101,7 +101,7 @@ const createBook = async (req, res) => {
       return res.status(400).send({ status: false, message: " released date is required" })
     }
 
-    if (!moment(releasedAt,"YYYY-MM-DD",true).isValid()) {
+    if (!moment(releasedAt, "YYYY-MM-DD", true).isValid()) {
       return res.status(400).send({ status: false, message: " plz enter valid date" })
 
     }
@@ -122,52 +122,49 @@ const createBook = async (req, res) => {
 
 const getBook = async (req, res) => {
   try {
-      let data = req.query
-      
-     
-       let filter ={ isDeleted:false }
+    let data = req.query
 
- 
-  if(isValidRequestBody(data))
 
-  
-    {
+    let filter = { isDeleted: false }
+
+
+    if (isValidRequestBody(data)) {
       const { userId, category, subcategory } = data
-      if(!(userId||category||subcategory)){
+      if (!(userId || category || subcategory)) {
         return res.status(400).send({ status: false, message: "plz enter valid filter" })
 
       }
-      
 
-      if(isValidObjectId(userId)){
-        filter["userId"]=userId
-      }
-      
-    
-  
-      if(isValid(category)){
-      filter["category"]=category
-      }
-    
 
-    if(isValid(subcategory)){
-      const subcategoryData = subcategory.trim().split(",").map(x=>x.trim())
-      filter["subcategory"]={$all:subcategoryData}
-  }
-}
- 
+      if (isValidObjectId(userId)) {
+        filter["userId"] = userId
+      }
+
+
+
+      if (isValid(category)) {
+        filter["category"] = category
+      }
+
+
+      if (isValid(subcategory)) {
+        const subcategoryData = subcategory.trim().split(",").map(x => x.trim())
+        filter["subcategory"] = { $all: subcategoryData }
+      }
+    }
+
     let books = await bookModel.find(filter).collation({ locale: 'en', strength: 2 })
       .select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
       .sort({ 'title': 1 })
-  
-     
+
+
     if (!books.length)
       return res.status(404).send({ status: false, message: "No books Available." })
 
     return res.status(200).send({ status: true, count: books.length, message: 'book list', data: books });
   }
 
- catch (error) {
+  catch (error) {
     res.status(500).send({ status: 'error', Error: error.message })
   }
 }
@@ -181,27 +178,27 @@ const getBook = async (req, res) => {
 const getBooksByParams = async (req, res) => {
   try {
     const bookId = req.params.bookId
-    
+
 
     // bookId validation
 
     if (!isValidObjectId(bookId)) {
       return res.status(400).send({ status: false, message: "plz enter valid BookId" })
     }
-    let checkBook = await bookModel.findOne({_id: bookId,isDeleted:false}).lean()
+    let checkBook = await bookModel.findOne({ _id: bookId, isDeleted: false }).lean()
     console.log(checkBook)
 
     if (!checkBook) {
       return res.status(404).send({ status: false, message: "book not found " })
     }
     // data from reviewModel
-    let reviewCheck = await reviewModel.find({ bookId: bookId ,isDeleted:false})
+    let reviewCheck = await reviewModel.find({ bookId: bookId, isDeleted: false })
 
     // adding reviewsData in bookData
 
     checkBook["reviewsData"] = reviewCheck
 
-    
+
     return res.status(200).send({ status: true, message: 'Books list', data: checkBook })
 
   }
@@ -220,7 +217,7 @@ const updateBooks = async function (req, res) {
     let bookId = req.params.bookId
     let data = req.body
     let { title, excerpt, releasedAt, ISBN } = data
-    let tokenUserId =req["userId"]
+    let tokenUserId = req["userId"]
 
     if (!isValidObjectId(bookId)) {
       return res.status(400).send({ status: false, message: "plz enter valid BookId" })
@@ -230,12 +227,12 @@ const updateBooks = async function (req, res) {
       return res.status(404).send({ status: false, message: "No Book Found" })
     }
 
-    let userId= book.userId
-    if(tokenUserId!=userId){
-      return res.status(401).send({status:false,message:"you are unauthorized to access this data "})
+    let userId = book.userId
+    if (tokenUserId != userId) {
+      return res.status(401).send({ status: false, message: "you are unauthorized to access this data " })
     }
 
-    let x = (!(title||excerpt ||releasedAt ||ISBN))
+    let x = (!(title || excerpt || releasedAt || ISBN))
     if (!isValidRequestBody(data) || x) {
       return res.status(400).send({ status: false, message: "plz enter valid data for updation" })
 
@@ -260,7 +257,7 @@ const updateBooks = async function (req, res) {
     }
 
     if (releasedAt)
-      if (!moment(releasedAt,"YYYY-MM-DD",true).isValid()) {
+      if (!moment(releasedAt, "YYYY-MM-DD", true).isValid()) {
         return res.status(400).send({ status: false, message: " plz enter valid date" })
       }
 
@@ -284,7 +281,7 @@ const deleteBooks = async (req, res) => {
   try {
     let id = req.params.bookId
 
-    const tokenUserId=req["userId"]
+    const tokenUserId = req["userId"]
 
     if (!isValidObjectId(id)) {
 
@@ -300,15 +297,15 @@ const deleteBooks = async (req, res) => {
 
     let userId = findBook.userId
 
-    if(tokenUserId!=userId){
-      return res.status(401).send({status:false,message:"you are unauthorized to access this data "})
+    if (tokenUserId != userId) {
+      return res.status(401).send({ status: false, message: "you are unauthorized to access this data " })
     }
-   
-     await bookModel.findOneAndUpdate({ _id: id },
+
+    await bookModel.findOneAndUpdate({ _id: id },
       { $set: { isDeleted: true, deletedAt: Date.now() } },
       { new: true })
-    return res.status(200).send({ status: true, message: "deleted sucessfully"})
-    }
+    return res.status(200).send({ status: true, message: "deleted sucessfully" })
+  }
   catch (err) {
     console.log(err.message)
     return res.status(500).send({ status: "error", msg: err.message })
