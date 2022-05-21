@@ -5,7 +5,7 @@ const redis = require("redis");
 const { promisify } = require("util");
 
 
-//Connect to redis
+//Connect to redisClient-
 const redisClient = redis.createClient(
     14740,
     "redis-14740.c301.ap-south-1-1.ec2.cloud.redislabs.com",
@@ -23,16 +23,18 @@ redisClient.on("connect", async function () {
 //2. use the commands :
 
 //Connection setup for redis
-const SET_ASYNC = promisify(redisClient.SET).bind(redisClient);
-const GET_ASYNC = promisify(redisClient.GET).bind(redisClient)
+const SET_ASYNC = promisify(redisClient.SET).bind(redisClient);    //Bind- its bind(tie) the object with promise
+const GET_ASYNC = promisify(redisClient.GET).bind(redisClient)     //promisify returning a fn()  which is redisclient
 
 
 //-----------------------------------------------------------Basic Validation---------------------------------------------------------------------------------//
 
+//CHECK url is valid or not-
 function validateUrl(value) {
     return /^(https:\/\/www\.|http:\/\/www\.|www\.)[a-zA-Z0-9\-_.$]+\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/[^\s]*)?/gm.test(value);
 }
 
+//Check request body is empty or not-
 function isValidBody(value) {
     if (Object.keys(value).length == 0) { return false }
     else return true;
@@ -54,10 +56,10 @@ const createUrl = async function (req, res) {
         if (!isValidBody(req.body)) return res.status(400).send({ status: false, message: 'Bad Request: Empty body' })
 
 
-        //Getting data from cache
+        //Getting(finding) data from cache
         let isCachedUrlData = await GET_ASYNC(`${longUrl}`)
         if (isCachedUrlData) {
-            let cachedUrlData = JSON.parse(isCachedUrlData)
+            let cachedUrlData = JSON.parse(isCachedUrlData)    //Json.parse_ Create a object from string
 
             data = {
                 longUrl: cachedUrlData.longUrl,
@@ -92,7 +94,7 @@ const createUrl = async function (req, res) {
                 urlCode: saveUrl.urlCode
             }
 
-            await SET_ASYNC(`${longUrl}`, JSON.stringify(result))
+            await SET_ASYNC(`${longUrl}`, JSON.stringify(result))     //Json.stringify_ create a json string from js object.
 
             return res.status(201).send({ status: true, message: "successfully Generated", data: result })
         }
@@ -113,12 +115,14 @@ const getUrl = async function (req, res) {
         const urlCode = req.params.urlCode;
         console.log(urlCode)
 
+        //Getting(finding) data from cache
         let cacheUrlcode = await GET_ASYNC(`${urlCode}`);
 
-        let value = JSON.parse(cacheUrlcode)
+        //
+        let value = JSON.parse(cacheUrlcode)                                  //Json.parse_ Create a object from string value
 
         if (value) {
-            return res.status(302).redirect(value.longUrl);
+            return res.status(302).redirect(value.longUrl);                   //redected to longurl from urlcode
         }
         else {
             const data = await urlModel.findOne({ urlCode: urlCode })
@@ -127,7 +131,7 @@ const getUrl = async function (req, res) {
             if (!data) {
                 return res.status(404).send({ status: false, msg: "Url Not Found." })
             }
-            await SET_ASYNC(`${urlCode}`, JSON.stringify(data));
+            await SET_ASYNC(`${urlCode}`, JSON.stringify(data));               //Json.stringify_ create a json string from js object.
             return res.status(302).redirect(data.longUrl)
         }
     }
@@ -138,23 +142,11 @@ const getUrl = async function (req, res) {
 
 
 
-//-------------------------------------------------------------------delete cache data---------------------------------------------------------------//
-
-const flushRedis = (req, res) => {
-
-    redisClient.flushall('ASYNC', (err, data) => {
-        if (err)
-            console.log(err)
-        else if (data)
-            console.log('Memory flushed:', data)
-    })
-    res.status(200).send({ message: "Redis memory cleared" })
-    
-}
 
 
 
-module.exports = { createUrl, getUrl, flushRedis }
+
+module.exports = { createUrl, getUrl }
 
 
 
