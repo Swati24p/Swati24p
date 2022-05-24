@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     profileImage: {
         type: String,
         required: true
-    }, // s3 link
+    },
     phone: {
         type: String,
         required: true,
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         minLen: 8,
         maxLen: 15
-    }, // encrypted password
+    },
     address: {
         shipping: {
             street: { type: String, required: true },

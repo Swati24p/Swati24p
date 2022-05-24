@@ -1,10 +1,8 @@
-const mongoose = require("mongoose");
 const aws = require("aws-sdk");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/userModel");
-const validator = require('../Validator/validation');
-const userModel = require("../Models/userModel")
+const validator = require('../middleware/validation');
 
 
 
@@ -37,8 +35,8 @@ let uploadFile = async (file) => {
 };
 
 
-// ************************************************************* POST /register ************************************************************ //
 
+// ***************************************** POST /register **************************************** //
 const createUser = async function (req, res) {
     try {
         // let data = req.body
@@ -179,8 +177,9 @@ const createUser = async function (req, res) {
     }
 };
 
-//===========================LogIn Api=================================
 
+
+//===========================LogIn Api=================================
 const login = async function (req, res) {
     try {
         const data = req.body;
@@ -230,45 +229,45 @@ const login = async function (req, res) {
     }
 };
 
+
+
 //=====================Get User api=================================
-
-
-const getUser = async (req,res)=>{
-    try{
+const getUser = async (req, res) => {
+    try {
         let userId = req.params.userId
         let tokenId = req.userId
 
-        if(!(validator.isValid(userId))){
-            return res.status(400).send({status:false , message:"Please Provide User Id"})
+        if (!(validator.isValid(userId))) {
+            return res.status(400).send({ status: false, message: "Please Provide User Id" })
         }
 
-        if(!(validator.isValidObjectId(userId))){
-            return res.status(400).send({status:false , message:"invalid userId"})
-        }
-        
-
-        if(!(validator.isValidObjectId(userId))){
-            return res.status(400).send({status:false , message:"invalid Token"})
+        if (!(validator.isValidObjectId(userId))) {
+            return res.status(400).send({ status: false, message: "invalid userId" })
         }
 
-         if (!(userId==tokenId)){
-            return res.status(401).send({status:false , message:"Unauthorized User"})
-         }
 
-        let checkData = await userModel.findOne({_id:userId})
-
-        if (!checkData){
-            return res.status(404).send({status:false , message:"User not Found"})
+        if (!(validator.isValidObjectId(userId))) {
+            return res.status(400).send({ status: false, message: "invalid Token" })
         }
 
-        return res.status(200).send({status:true, message:"Success",data : checkData })
+        if (!(userId == tokenId)) {
+            return res.status(401).send({ status: false, message: "Unauthorized User" })
+        }
+
+        let checkData = await UserModel.findOne({ _id: userId })
+
+        if (!checkData) {
+            return res.status(404).send({ status: false, message: "User not Found" })
+        }
+
+        return res.status(200).send({ status: true, message: "Success", data: checkData })
 
     }
-    catch(error){
-return res.status(500).send({status:false , message:error.message })
+    catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
     }
+};
 
-}
 
 
-module.exports = { createUser, login , getUser };
+module.exports = { createUser, login, getUser };
