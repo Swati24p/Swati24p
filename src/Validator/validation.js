@@ -11,14 +11,10 @@ const isValidBody = function (requestBody) {
     return Object.keys(requestBody).length > 0;
 }
 
-const isValidobjectId = (objectId) => {
-    return mongoose.Types.ObjectId.isValid(objectId)
+const isValidObjectId = (ObjectId) => {
+    return mongoose.Types.ObjectId.isValid(ObjectId)
 }
 
-const isValidString = function (value) {
-    if (typeof value === 'string' && value.trim().length === 0) return false  
-    return true;
-}
 
 const isValidEmail = function (value) {
     
@@ -63,8 +59,7 @@ const isValidPincode = function(value) {
 module.exports = {
     isValid, 
     isValidBody, 
-    isValidobjectId,
-    isValidString, 
+    isValidobjectId, 
     isValidEmail, 
     isValidNumber,
     isValidName, 
