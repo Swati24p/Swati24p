@@ -59,7 +59,7 @@ const isValidPincode = function(value) {
 module.exports = {
     isValid, 
     isValidBody, 
-    isValidobjectId, 
+    isValidObjectId, 
     isValidEmail, 
     isValidNumber,
     isValidName, 

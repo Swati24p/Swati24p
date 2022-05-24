@@ -4,6 +4,7 @@ const aws = require("aws-sdk")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const validator = require('../Validator/validation');
+const userModel = require("../Models/userModel")
 
 
 // ****************************************************************** AWS-S3 ****************************************************************** //
@@ -173,152 +174,7 @@ const createUser = async function(req,res) {
         else {
             return res.status(400).send({ status: false, msg: "No file found" });
         }
-<<<<<<< HEAD
-
-        if (!isValidRequestBody(data)) {
-            res.status(400).send({ status: false, message: "invalid request parameters.plzz provide user details" })
-            return
-        }
-
-        //Validate attributes --
-        let { fname, lname, email, password, phone, address } = data
-
-        if (!isValid(fname)) {
-            res.status(400).send({ status: false, message: " first name is required" })
-            return
-        }
-        if (!/^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$/.test(fname)) {
-            return res.status(400).send({ status: false, message: "Please enter valid user first name." })
-        }
-
-
-        // name validation
-        if (!isValid(lname)) {
-            res.status(400).send({ status: false, message: "last name is required" })
-            return
-        }
-
-        //this will validate the type of name including alphabets and its property withe the help of regex.
-        if (!/^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$/.test(lname)) {
-            return res.status(400).send({ status: false, message: "Please enter valid user last name." })
-        }
-
-        //Email Validation --
-        if (!isValid(email)) {
-            return res.status(400).send({ status: false, message: "plzz enter email" })
-        }
-        const emailPattern = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})/       //email regex validation for validate the type of email.
-
-        if (!email.match(emailPattern)) {
-            return res.status(400).send({ status: false, message: "This is not a valid email" })
-        }
-
-        email = email.toLowerCase().trim()
-        const emailExt = await userModel.findOne({ email: email })
-        if (emailExt) {
-            return res.status(409).send({ status: false, message: "Email already exists" })
-        }
-
-        //Password Validations--
-        if (!isValid(password)) {
-            return res.status(400).send({ status: false, message: "plzz enter password" })
-        }
-        if (password.length < 8 || password.length > 15) {
-            return res.status(400).send({ status: false, message: "plzz enter valid password" })
-        }
-
-
-        //Phone Validations--
-        if (!isValid(phone)) {
-            return res.status(400).send({ status: false, message: "plzz enter mobile" })
-        }
-
-        //this regex will to set the phone no. length to 10 numeric digits only.
-        if (!/^(\+91)?0?[6-9]\d{9}$/.test(phone)) {
-            return res.status(400).send({ status: false, message: "Please enter valid 10 digit mobile number." })
-        }
-
-        const phoneExt = await userModel.findOne({ phone: phone })
-        if (phoneExt) {
-            return res.status(409).send({ status: false, message: "phone number already exists" })
-        }
-
-        //for address--
-
-        // this validation will check the address is in the object format or not--
-        if (!address) {
-            return res.status(400).send({ status: false, message: "address is required" })
-        }
-
-         if (typeof address != "object") {
-         return res.status(400).send({ status: false, message: "address should be an object" })
-         }
-        let { shipping, billing } = address
-
-        if (!shipping) {
-            return res.status(400).send({ status: false, message: "shipping is required" })
-        }
-
-        if (typeof shipping != "object") {
-            return res.status(400).send({ status: false, message: "shipping should be an object" })
-        }
-        if (!billing) {
-            return res.status(400).send({ status: false, message: "billing is required" })
-        }
-
-        if (typeof billing != "object") {
-            return res.status(400).send({ status: false, message: "billing should be an object" })
-        }
-
-        if (!isValid(shipping.street)) {
-            return res.status(400).send({ status: false, message: "shipping street is required" })
-        }
-
-        if (!isValid(shipping.city)) {
-            return res.status(400).send({ status: false, message: "shipping city is required" })
-        }
-        if (!/^[a-zA-Z]+$/.test(shipping.city)) {
-            return res.status(400).send({ status: false, message: "city field have to fill by alpha characters" });
-        }
-
-
-        if (!isValid(shipping.pincode)) {
-            return res.status(400).send({ status: false, message: "shipping street is required" })
-        }
-
-        //applicable only for numeric values and extend to be 6 characters only--
-        if (!/^\d{6}$/.test(shipping.pincode)) {
-            return res.status(400).send({ status: false, message: "plz enter valid pincode" });
-        }
-
-        if (!isValid(billing.street)) {
-            return res.status(400).send({ status: false, message: "billing street is required" })
-        }
-
-
-        if (!isValid(billing.city)) {
-            return res.status(400).send({ status: false, message: "billing city is required" })
-        }
-        if (!/^[a-zA-Z]+$/.test(billing.city)) {
-            return res.status(400).send({ status: false, message: "city field have to fill by alpha characters" });
-        }
-
-
-        if (!isValid(billing.pincode)) {
-            return res.status(400).send({ status: false, message: "billing street is required" })
-        }
-
-        //applicable only for numeric values and extend to be 6 characters only--
-        if (!/^\d{6}$/.test(billing.pincode)) {
-            return res.status(400).send({ status: false, message: "plz enter valid  billing pincode" });
-        }
-
-        let saveData = await userModel.create(data)
-        return res.status(201).send({ status: true, message: "success", data: saveData })
-
-=======
         
->>>>>>> c530940631c62a9639905eb58fa6e14628a0ae8d
     }
     catch (err) {
         console.log("This is the error :", err.message)
@@ -326,29 +182,43 @@ const createUser = async function(req,res) {
     }
 }
 
-<<<<<<< HEAD
-module.exports = { createUser }
+module.exports.createUser = createUser
 
-// =====================Get  user Api=================
 
-const getUser = async (req,res) =>{
+
+const grtUser = async (req,res)=>{
     try{
         let userId = req.params.userId
         let tokenId = req.userId
 
-
-        if(!validator.isValid(userId)){
-            return res.status(400).send({status:false , message:"Please Provide " })
+        if(!(validator.isValid(userId))){
+            return res.status(400).send({status:false , message:"Please Provide User Id"})
         }
 
+        if(!(validator.isValidObjectId(userId))){
+            return res.status(400).send({status:false , message:"invalid userId"})
+        }
+        
+
+        if(!(validator.isValidObjectId(userId))){
+            return res.status(400).send({status:false , message:"invalid Token"})
+        }
+
+        if (!(userId==tokenId)){
+            return res.status(401).send({status:false , message:"Unauthorized User"})
+        }
+
+        let checkData = await userModel.findOne({_id:userId})
+
+        if (!checkData){
+            return res.status(404).send({status:false , message:"User not Found"})
+        }
+
+        return res.status(200).send({status:true, message:"Success",data : checkData })
 
     }
     catch(error){
-
+return res.status(500).send({status:false , message:error.message })
     }
+
 }
-
-=======
-module.exports.createUser = createUser
->>>>>>> c530940631c62a9639905eb58fa6e14628a0ae8d
-
