@@ -18,7 +18,7 @@ aws.config.update({
   // this function uploads file to AWS and gives back the url for the file
   let uploadFile = async (file) => {
     return new Promise(function (resolve, reject) { 
-      
+    
       let s3 = new aws.S3({ apiVersion: "2006-03-01" });
       var uploadParams = {
         ACL: "public-read", 
@@ -43,16 +43,18 @@ aws.config.update({
 
 const createUser = async function(req,res) {
     try{
-        const body = req.body
-        // const body = req.body.data;
-        // const JSONbody = JSON.parse(body)
+       // let data = req.body
+        let body = JSON.parse(JSON.stringify(req.body))
+        // body.address = JSON.parse(body.address)
+
 
         //Validate body 
+
         if (!validator.isValidBody(body)) {
             return res.status(400).send({ status: false, msg: "User body should not be empty" });
         }
 
-        const {fname, lname, email, password, phone, address} = body
+        let {fname, lname, email, password, phone, address} = body
 
         // Validate fname
         if(!validator.isValid(fname)) {
@@ -105,12 +107,12 @@ const createUser = async function(req,res) {
         }
 
         // Validate address
-        if(!validator.isValid(address)) {
+        if(!address) {
             return res.status(400).send({status: false, message: "Address is required"})
         }
-
+        address = JSON.parse(address)
         // Validate shipping address
-        if(!validator.isValid(address.shipping)) {
+        if(!address.shipping) {
             return res.status(400).send({status: false, message: "Shipping address is required"})
         }
 
@@ -141,9 +143,15 @@ const createUser = async function(req,res) {
 
 
         // Duplicate entries
-        const isAlredyUsed = await UserModel.findOne({phone}, {email});
+        email = email.toLowerCase().trim()
+        let isAlredyUsed = await UserModel.findOne({email});
         if(isAlredyUsed) {
-            return res.status(400).send({status: false, message: `${phone} number or ${email} mail is already registered`})
+            return res.status(400).send({status: false, message: ` ${email} mail is already registered`})
+        }
+        
+        let duplicatePhone = await UserModel.findOne({phone});
+        if(duplicatePhone){
+            return res.status(400).send({status:false, message:`${phone} phone is already used`})
         }
 
 
@@ -153,16 +161,17 @@ const createUser = async function(req,res) {
         
 
         // encrypted password
-        const encryptPassword = await bcrypt.hash(password,10)
+        let encryptPassword = await bcrypt.hash(password,12)
 
         profileImage = uploadedFileURL
-
-        const userData = {fname, lname, email, profileImage, phone, password: encryptPassword, address}
-        const savedData = await UserModel.create(userData)
+        body.address = JSON.parse(body.address)
+        let userData = {fname, lname, email, profileImage, phone, password: encryptPassword, address}
+      
+        let savedData = await UserModel.create(userData)
         return res.status(201).send({status: true, message: "User created successfully", data: savedData})
         }
         else {
-            return res.status(400).send({ status: false, msg: "No file to write" });
+            return res.status(400).send({ status: false, msg: "No file found" });
         }
         
     }
