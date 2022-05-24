@@ -179,47 +179,8 @@ const createUser = async function (req, res) {
     }
 };
 
+//===========================LogIn Api=================================
 
-<<<<<<< HEAD
-
-
-const grtUser = async (req,res)=>{
-    try{
-        let userId = req.params.userId
-        let tokenId = req.userId
-
-        if(!(validator.isValid(userId))){
-            return res.status(400).send({status:false , message:"Please Provide User Id"})
-        }
-
-        if(!(validator.isValidObjectId(userId))){
-            return res.status(400).send({status:false , message:"invalid userId"})
-        }
-        
-
-        if(!(validator.isValidObjectId(userId))){
-            return res.status(400).send({status:false , message:"invalid Token"})
-        }
-
-        if (!(userId==tokenId)){
-            return res.status(401).send({status:false , message:"Unauthorized User"})
-        }
-
-        let checkData = await userModel.findOne({_id:userId})
-
-        if (!checkData){
-            return res.status(404).send({status:false , message:"User not Found"})
-        }
-
-        return res.status(200).send({status:true, message:"Success",data : checkData })
-
-    }
-    catch(error){
-return res.status(500).send({status:false , message:error.message })
-    }
-
-}
-=======
 const login = async function (req, res) {
     try {
         const data = req.body;
@@ -269,6 +230,45 @@ const login = async function (req, res) {
     }
 };
 
+//=====================Get User api=================================
 
-module.exports = { createUser, login };
->>>>>>> 9b0b90f94ea8f8259fc7b4df113b9c1bb1310ee5
+
+const getUser = async (req,res)=>{
+    try{
+        let userId = req.params.userId
+        let tokenId = req.userId
+
+        if(!(validator.isValid(userId))){
+            return res.status(400).send({status:false , message:"Please Provide User Id"})
+        }
+
+        if(!(validator.isValidObjectId(userId))){
+            return res.status(400).send({status:false , message:"invalid userId"})
+        }
+        
+
+        if(!(validator.isValidObjectId(userId))){
+            return res.status(400).send({status:false , message:"invalid Token"})
+        }
+
+         if (!(userId==tokenId)){
+            return res.status(401).send({status:false , message:"Unauthorized User"})
+         }
+
+        let checkData = await userModel.findOne({_id:userId})
+
+        if (!checkData){
+            return res.status(404).send({status:false , message:"User not Found"})
+        }
+
+        return res.status(200).send({status:true, message:"Success",data : checkData })
+
+    }
+    catch(error){
+return res.status(500).send({status:false , message:error.message })
+    }
+
+}
+
+
+module.exports = { createUser, login , getUser };

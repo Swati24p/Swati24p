@@ -57,17 +57,10 @@ const isValidPincode = function (value) {
 
 
 module.exports = {
-<<<<<<< HEAD
-    isValid, 
-    isValidBody, 
-    isValidObjectId, 
-    isValidEmail, 
-=======
     isValid,
     isValidBody,
     isValidObjectId,
     isValidEmail,
->>>>>>> 9b0b90f94ea8f8259fc7b4df113b9c1bb1310ee5
     isValidNumber,
     isValidName,
     isValidPassword,
