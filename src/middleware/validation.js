@@ -48,12 +48,11 @@ const isValidPassword = function (value) {
 }
 
 const isValidPincode = function (value) {
-    if (!(/^[1-9]{1}[0-9]{2}[0-9]{3}$/.test(value))) {
+    if (!(/^[1-9]{1}[0-9]{5}$/.test(value))) {
         return false
     }
     return true
 }
-
 
 
 module.exports = {

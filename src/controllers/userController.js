@@ -6,7 +6,7 @@ const validator = require('../middleware/validation');
 
 
 
-// ********************************************** AWS-S3 ********************************************** //
+// ********************************************************** AWS-S3 ********************************************************************* //
 aws.config.update({
     accessKeyId: "AKIAY3L35MCRVFM24Q7U",  // id
     secretAccessKey: "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",  // secret password
@@ -34,7 +34,7 @@ let uploadFile = async (file) => {
 
 
 
-// ***************************************** POST /register **************************************** //
+// ************************************************************* POST /register ****************************************************************************** //
 const createUser = async function (req, res) {
     try {
         // let data = req.body
@@ -104,7 +104,9 @@ const createUser = async function (req, res) {
         if (!address) {
             return res.status(400).send({ status: false, message: "Address is required" })
         }
+
         address = JSON.parse(address)
+
         // Validate shipping address
         if (!address.shipping) {
             return res.status(400).send({ status: false, message: "Shipping address is required" })
@@ -133,6 +135,7 @@ const createUser = async function (req, res) {
         // Validate billing pincode
         if (!validator.isValidPincode(address.billing.pincode)) {
             return res.status(400).send({ status: false, msg: "Invalid billing pincode" })
+           
         }
 
 
@@ -158,7 +161,9 @@ const createUser = async function (req, res) {
             let encryptPassword = await bcrypt.hash(password, 12)
 
             profileImage = uploadedFileURL
+
             body.address = JSON.parse(body.address)
+
             let userData = { fname, lname, email, profileImage, phone, password: encryptPassword, address }
 
             let savedData = await UserModel.create(userData)
@@ -177,7 +182,8 @@ const createUser = async function (req, res) {
 
 
 
-//===========================LogIn Api=================================
+//================================================================UserLogIn Api========================================================================//
+
 const login = async function (req, res) {
     try {
         const data = req.body;
@@ -212,14 +218,14 @@ const login = async function (req, res) {
         const userId = findData._id;
         const token = jwt.sign({
             userId: userId,
-            expiresIn: "1000s"
+            expiresIn: "3600s"
         },
             "GroupNo14"
         );
 
         res.status(200).send({
             status: true,
-            message: "User login successfull",
+            message: "User login successfully",
             data: { userId: userId, token: token }
         });
     } catch (err) {
@@ -229,7 +235,8 @@ const login = async function (req, res) {
 
 
 
-//=====================Get User api=================================
+//====================================================================Get User api========================================================================//
+
 const getUser = async (req, res) => {
     try {
         let userId = req.params.userId

@@ -7,7 +7,7 @@ const authentication = async function (req, res, next) {
         let token = req.headers["x-api-key"];
         if (!token) token = req.headers["X-Api-Key"];
         if (!token) {
-            return res.status(400).send({ Error: "Enter x-api-key In Header !!!" });
+            return res.status(400).send({ Error: "Enter x-api-key In BearerToken !!!" });
         }
 
 
