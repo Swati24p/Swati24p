@@ -3,12 +3,12 @@ const bodyParser = require("body-parser")
 const route = require("./route/routes")
 const mongoose = require("mongoose")
 const app = express();
-const multer= require("multer");
+const multer = require("multer");
 const { AppConfig } = require('aws-sdk');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use( multer().any())
+app.use(multer().any())
 mongoose.connect("mongodb+srv://swati_pathak:DGhDxlBIIfyRwGwk@cluster0.ogdpf.mongodb.net/group-14Database", {
     useNewUrlParser: true
 })
@@ -19,7 +19,7 @@ app.use('/', route);
 
 app.all('*', function (req, res) {
     throw new Error("Bad request")
-})
+});
 
 app.use(function (e, req, res, next) {
     if (e.message === "Bad request") {
