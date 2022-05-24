@@ -15,6 +15,7 @@ const authentication = async function (req, res, next) {
         if (!checktoken) {
             return res.status(404).send({ Status: false, msg: "Enter Valid Token !!!" });
         }
+        req['userId'] = checktoken.userId;
         next();
     }
     catch (err) {
