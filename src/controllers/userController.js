@@ -138,9 +138,9 @@ const createUser = async (req, res) => {
             return res.status(400).send({ status: false, message: "address is required" })
         }
 
-        if (typeof address != "object") {
-            return res.status(400).send({ status: false, message: "address should be an object" })
-        }
+         if (typeof address != "object") {
+         return res.status(400).send({ status: false, message: "address should be an object" })
+         }
         let { shipping, billing } = address
 
         if (!shipping) {
@@ -214,3 +214,24 @@ const createUser = async (req, res) => {
 }
 
 module.exports = { createUser }
+
+// =====================Get  user Api=================
+
+const getUser = async (req,res) =>{
+    try{
+        let userId = req.params.userId
+        let tokenId = req.userId
+
+
+        if(!validator.isValid(userId)){
+            return res.status(400).send({status:false , message:"Please Provide " })
+        }
+
+
+    }
+    catch(error){
+
+    }
+}
+
+
