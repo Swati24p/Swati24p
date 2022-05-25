@@ -27,7 +27,9 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minLen: 8,
+        maxLen: 15
     },
     address: {
         shipping: {
