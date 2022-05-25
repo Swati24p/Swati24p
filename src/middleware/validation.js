@@ -93,14 +93,6 @@ const validProduct = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "Plz Use Indian Currency Format(₹) In Body !!!" });
         }
 
-        if (!isFreeShipping) {
-            return res.status(400).send({ status: false, msg: "Plz Enter isFreeShipping In Body !!!" });
-        }
-
-        if (!style) {
-            return res.status(400).send({ status: false, msg: "Plz Enter style In Body !!!" });
-        }
-
         if (!availableSizes) {
             return res.status(400).send({ status: false, msg: "Plz Enter availableSizes In Body !!!" });
         }
