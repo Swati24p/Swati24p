@@ -46,7 +46,6 @@ const postProducts = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Plz Enter style In Body !!!" });
         }
 
-        console.log(availableSizes)
         if (!availableSizes) {
             return res.status(400).send({ status: false, msg: "Plz Enter availableSizes In Body !!!" });
         }
@@ -63,11 +62,12 @@ const postProducts = async function (req, res) {
             let files = req.files;
             if (files && files.length > 0) {
                 let uploadedFileURL = await aws.uploadFile(files[0]);
+
                 productImage = uploadedFileURL;
 
                 let userData = { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments };
                 const savedData = await productModel.create(userData);
-                res.status(201).send({ status: true, data: savedData });
+                res.status(201).send({ status: true, message:'Success', data: savedData });
             }
             else {
                 return res.status(400).send({ status: false, msg: "No file found" });
@@ -148,6 +148,7 @@ const getIdproducts = async (req, res) => {
 
         //find the productId which is deleted key is false--
         let product = await productModel.findOne({ _id: data, isDeleted: false })
+        
         if (!product) {
             return res.status(404).send({ status: false, message: "No Products Available!!" })
         }
