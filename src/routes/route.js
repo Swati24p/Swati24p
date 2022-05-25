@@ -3,6 +3,7 @@ const router = express.Router();
 const { createUser, login, getUser, update } = require("../controllers/UserController");
 const { postProducts, getProduct, getIdproducts, putIdProducts } = require("../controllers/productController");
 const auth = require('../middleware/auth');
+const valid = require("../middleware/validation");
 
 
 
@@ -13,7 +14,7 @@ router.get("/user/:userId/profile", auth.authentication, getUser);
 router.put("/user/:userId/profile", auth.authentication, update);
 
 // FEATURE-2 Products API
-router.post("/products", postProducts);
+router.post("/products", valid.validProduct, postProducts);
 router.get("/products", getProduct);
 router.get("/products/:productId", getIdproducts);
 router.put("/products/:productId", putIdProducts);
