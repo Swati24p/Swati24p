@@ -1,4 +1,5 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const productModel = require("../Models/productModel");
 
 //this validation will check the type of values--
 const isValid = function (value) {
@@ -71,6 +72,10 @@ const validProduct = async function (req, res, next) {
 
         if (!title) {
             return res.status(400).send({ status: false, msg: "Plz Enter title In Body !!!" });
+        }
+        const findTitle = await productModel.findOne({ title: title });
+        if (findTitle) {
+            return res.status(400).send({ status: false, msg: "Title Is Already Exists, Plz Enter Another One !!!" });
         }
 
         if (!description) {
