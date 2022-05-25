@@ -106,9 +106,6 @@ const validProduct = async function (req, res, next) {
         }
 
         if (availableSizes == 'S' || availableSizes == 'XS' || availableSizes == 'M' || availableSizes == 'X' || availableSizes == 'L' || availableSizes == 'XXL' || availableSizes == 'XL') {
-            if (!installments) {
-                return res.status(400).send({ status: false, msg: "Plz Enter installments In Body !!!" });
-            }
             if (isNaN(installments) == true) {
                 return res.status(400).send({ status: false, msg: "Plz Enter Number In installments !!!" });
             }
