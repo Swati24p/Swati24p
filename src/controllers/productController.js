@@ -3,6 +3,7 @@ const validator = require('../middleware/validation');
 const aws = require('../aws/aws');
 
 
+//==========================Post/Create Product Api======================================
 
 const pProducts = async function (req, res) {
     try {
@@ -79,6 +80,59 @@ const pProducts = async function (req, res) {
     }
 };
 
+//=========================get Products from Query Api===========================================
+
+const getProduct = async(req,res) => {
+    try{
+        let filterQuery = req.query;
+        let {size , name , priceGreaterThan , priceLessThan,priceSort} = filterQuery;
+    
+        if(size || name || priceGreaterThan || priceLessThan || priceSort){
+            let query = {isDeleted: false}
+    
+            if (size){
+                query['availableSizes'] = size
+            }
+    
+            if(name){
+                query['title'] = {$regex: name}
+            }
+    
+            if(priceGreaterThan){
+                query['price'] = {$gt: priceGreaterThan}
+            }
+    
+            if(priceLessThan){
+                query['price'] = {$lt : priceLessThan}
+            }
+    
+            if(priceGreaterThan && priceLessThan){
+                query['price'] = {'$gt': priceGreaterThan , '$lt':priceLessThan}
+            }
+    
+            if (priceSort){
+                if(!(priceSort == -1 || priceSort == 1)){
+                    return res.status(400).send({status:false,message:"You can only use 1 for Ascending and -1 for Descending Sorting" })
+                }
+            }
+    
+            let getAllProduct = await productModel.find(query).sort({price:priceSort})
+            
+            if(!(getAllProduct.length > 0)){
+              return res.status(404).send({status:false , message:"Products Not Found " })  
+            }
+            return res.status(200).send({status:true , message:"Success" , data:getAllProduct})
+        }
+        else{
+            returnres.status(400).send({status:false , message:"Invalid Request Query Params"})
+        }
+    
+    }
+    catch(error){
+        return res.status(500).send({status:false , error:error.message})
+    
+    }
+    }
 
 
-module.exports = { pProducts };
+module.exports = { pProducts , getProduct };
