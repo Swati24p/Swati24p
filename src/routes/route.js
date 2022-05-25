@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { createUser, login, getUser, update } = require("../controllers/UserController");
-const { postProducts, getProduct, getIdproducts, putIdProducts } = require("../controllers/productController");
+const { postProducts, getProduct, getIdproducts, putIdProducts,deleteById } = require("../controllers/productController");
 const auth = require('../middleware/auth');
 
 
@@ -17,7 +17,7 @@ router.post("/products", postProducts);
 router.get("/products", getProduct);
 router.get("/products/:productId", getIdproducts);
 router.put("/products/:productId", putIdProducts);
-// router.delete("/products/:productId", dProducts);
+ router.delete("/products/:productId", deleteById);
 
 
 // FEATURE-3 Cart APIs

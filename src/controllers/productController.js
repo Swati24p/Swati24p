@@ -168,7 +168,7 @@ const getIdproducts = async (req, res) => {
 
 
 
-//========================================================Update products by productId======================================================================//
+//***************************************************Update products by productId******************************************//
 
 const putIdProducts = async (req, res) =>{
     
@@ -223,4 +223,41 @@ const putIdProducts = async (req, res) =>{
 }
 
 
-module.exports = { postProducts, getProduct, getIdproducts, putIdProducts };
+// ******************************************************** DELETE /products/:productId ******************************************************* //
+
+const deleteById = async function (req, res){
+    try{
+    
+        const productId = req.params.productId
+    
+        if (!validator.isValidObjectId(productId)) {
+            return res.status(400).send({status:false, msg:`this ${productId} is not valid`})
+        }
+    
+        let deletedProduct = await productModel.findById({_id:productId})
+        if (!deletedProduct) {
+            return res.status(404).send({status:false, msg:`this ${productId} is not exist in db`})
+        }
+    
+        if (deletedProduct.isDeleted !== false) {
+            return res.status(400).send({status:false, msg:`this ${productId} is already deleted`})
+        }
+    
+        await productModel.findByIdAndUpdate({_id:productId},{$set:{isDeleted:true, deletedAt: new Date()}},{new:true})
+    
+        return res.status(200).send({status:true, msg:"successfully deleted"})
+    
+        }
+
+    catch (err) {
+        console.log("This is the error :", err.message)
+        res.status(500).send({ msg: "Error", error: err.message })
+    }
+}
+
+
+
+module.exports = { postProducts, getProduct, getIdproducts, putIdProducts ,deleteById};
+
+
+/////////////////////////////////////////////////////////////// END OF PRODUCT CONTROLLER ///////////////////////////////////////////////////
