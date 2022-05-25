@@ -25,9 +25,15 @@ const postProducts = async function (req, res) {
         if (!price) {
             return res.status(400).send({ status: false, msg: "Plz Enter price In Body !!!" });
         }
+        if(!validator.isValidPrice(price)) {
+                return res.status(400).send({status: false, msg: " Invalid price format"})
+            }
 
         if (!currencyId) {
             return res.status(400).send({ status: false, msg: "Plz Enter currencyId In Body !!!" });
+        }
+        if (currencyId != 'INR') {
+            return res.status(400).send({ status: false, msg: "Plz Use Indian CurrencyId(INR) In Body !!!" });
         }
 
         if (!currencyFormat) {
@@ -38,9 +44,9 @@ const postProducts = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Plz Use Indian Currency Format(₹) In Body !!!" });
         }
 
-        if (!isFreeShipping) {
-            return res.status(400).send({ status: false, msg: "Plz Enter isFreeShipping In Body !!!" });
-        }
+       // if (!isFreeShipping) {
+            //return res.status(400).send({ status: false, msg: "Plz Enter isFreeShipping In Body !!!" });
+       // }
 
         if (!style) {
             return res.status(400).send({ status: false, msg: "Plz Enter style In Body !!!" });
@@ -167,7 +173,49 @@ const getIdproducts = async (req, res) => {
 const putIdProducts = async (req, res) =>{
     
     try{
+              // Validate body
+        const body = req.body
+        if(!validator.isValidBody(body)) {
+           return res.status(400).send({ status: false, msg: "Product details must be present"})
+       }
 
+       const params = req.params;
+
+       //validate productId
+       if (!validator.isValidObjectId(params.productId)) {
+        return res.status(400).send({ status: false, message: "please enter valid productId" })
+    }
+
+       const {title, description, price, isFreeShipping, style, availableSizes, installments} = body
+
+       if(price){
+        if(!validator.isValidPrice(price)) {
+            return res.status(400).send({status: false, msg: "Invalid price format"})
+        }
+
+       }
+       if(availableSizes){
+        if(!validator.isValidSize(availableSizes)) {
+            return res.status(400).send({status: false, msg: " You trying to enter Invalid  Size"})
+        }
+
+       }
+       const searchProduct = await productModel.findOne({_id: params.productId, isDeleted: false})
+       if(!searchProduct) {
+           return res.status(404).send({status: false, msg: "ProductId does not exist"})
+       }
+
+       let files = req.files;
+       if (files && files.length > 0) {
+       var uploadedFileURL = await aws.uploadFile( files[0] );
+       }
+       const finalproduct = {
+           title, description, price, currencyId: "₹", currencyFormat: "INR",isFreeShipping, productImage: uploadedFileURL, style: style, availableSizes, installments
+       }
+
+       let updatedProduct = await productModel.findOneAndUpdate({_id:params.productId}, finalproduct, {new:true})
+       return res.status(200).send({status: true, msg: "Updated Successfully", data: updatedProduct}) 
+       
     }
     catch(error){
         res.status(500).send({ Error: error.message })

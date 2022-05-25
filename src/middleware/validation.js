@@ -59,6 +59,16 @@ const isValidPincode = function (value) {
     return true
 }
 
+const isValidPrice = function(value) {
+    if(!/^\d+(,\d{3})*(\.\d{1,2})?$/.test(value.trim())){
+        return false
+    }
+    return true
+}
+
+const isValidSize = function(value) {
+    return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) !== -1
+}
 
 
 module.exports = {
@@ -69,6 +79,7 @@ module.exports = {
     isValidNumber,
     isValidName,
     isValidPassword,
-    isValidPincode
-
+    isValidPincode,
+    isValidPrice, 
+    isValidSize
 }
