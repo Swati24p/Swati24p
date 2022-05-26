@@ -4,11 +4,13 @@ const productSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
-        unique: String
+        unique: String,
+        trim:true
     },
     description: {
         type: String,
-        required: true
+        required: true,
+        trim:true
     },
     price: {
         type: Number,
@@ -30,7 +32,8 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },  // s3 link
-    style: { type: String },
+
+    style: { type: String, trim:true },
 
     availableSizes: {
         type: String,
@@ -42,8 +45,8 @@ const productSchema = new mongoose.Schema({
     installments: { type: Number },
     
     deletedAt: {
-        type: Date,
-        default: null
+        type: Date
+        //default: null
     },
     isDeleted: {
         type: Boolean,

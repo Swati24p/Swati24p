@@ -18,7 +18,7 @@ router.post("/products", valid.validProduct, postProducts);
 router.get("/products", getProduct);
 router.get("/products/:productId", getIdproducts);
 router.put("/products/:productId", putIdProducts);
- router.delete("/products/:productId", deleteById);
+router.delete("/products/:productId", deleteById);
 
 
 // FEATURE-3 Cart APIs
