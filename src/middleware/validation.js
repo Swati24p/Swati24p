@@ -39,7 +39,7 @@ const isValidNumber = function (value) {
 
 //valid type of name
 const isValidName = function (value) {
-    if (!(/^[A-Za-z ]+$/.test(value))) {
+    if (!(/^[A-Za-z ]+$/.test(value.trim()))) {
         return false
     }
     return true
@@ -68,7 +68,7 @@ const validProduct = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "Plz Enter Data Inside Body !!!" });
         }
 
-        const { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments } = body;
+        const { title, description, price, currencyId, currencyFormat, availableSizes, installments } = body;
 
         if (!title) {
             return res.status(400).send({ status: false, msg: "Plz Enter title In Body !!!" });
