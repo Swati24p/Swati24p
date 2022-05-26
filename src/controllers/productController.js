@@ -62,12 +62,12 @@ const getProduct = async (req, res) => {
             let getAllProduct = await productModel.find(query).sort({ price: priceSort })
 
             if (!(getAllProduct.length > 0)) {
-                return res.status(404).send({ status: false, message: "Products Not Found " })
+                return res.status(404).send({ status: false, message: "Products Not Found" })
             }
             return res.status(200).send({ status: true, message: "Success", data: getAllProduct })
         }
         else {
-            returnres.status(400).send({ status: false, message: "Invalid Request Query Params" })
+            return res.status(400).send({ status: false, message: "Invalid Request Query Params" })
         }
 
     }

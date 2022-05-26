@@ -120,4 +120,6 @@ const validProduct = async function (req, res, next) {
         res.status(500).send({ status: false, msg: err.message });
     }
 }
+
+
 module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, validProduct };

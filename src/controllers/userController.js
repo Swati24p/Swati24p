@@ -377,7 +377,8 @@ const update = async function (req, res) {
                 updatedData['profileImage'] = uploadedFileURL
             }
         }
-        body.address = JSON.parse(body.address)
+         
+        //body.address = JSON.parse(body.address)
         const updated = await UserModel.findOneAndUpdate({ _id: userId }, updatedData, { new: true })
         return res.status(201).send({ status: true, data: updated })
     }
