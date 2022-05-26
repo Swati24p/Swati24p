@@ -134,9 +134,9 @@ const putIdProducts = async (req, res) =>{
        if(availableSizes){
         if(!validator.isValidSize(availableSizes)) {
             return res.status(400).send({status: false, msg: " You trying to enter Invalid  Size"})
-        }
-
+        }       
        }
+
        const searchProduct = await productModel.findOne({_id: params.productId, isDeleted: false})
        if(!searchProduct) {
            return res.status(404).send({status: false, msg: "ProductId does not exist"})

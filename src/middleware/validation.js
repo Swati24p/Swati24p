@@ -60,6 +60,17 @@ const isValidPincode = function (value) {
     }
     return true
 };
+//
+const isValidPrice = function(value) {
+    if(!/^\d+(,\d{3})*(\.\d{1,2})?$/.test(value.trim())){
+        return false
+    }
+    return true
+}
+//
+const isValidSize = function(value) {
+    return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) !== -1
+}
 
 const validProduct = async function (req, res, next) {
     try {
@@ -85,11 +96,16 @@ const validProduct = async function (req, res, next) {
         if (!price) {
             return res.status(400).send({ status: false, msg: "Plz Enter price In Body !!!" });
         }
+        if(!isValidPrice(price)){
+            return res.status(400).send({ status: false, msg: "Plz Enter valid format price In Body !!!" });
+        }
 
         if (!currencyId) {
             return res.status(400).send({ status: false, msg: "Plz Enter currencyId In Body !!!" });
         }
-
+        if(currencyId != 'INR'){
+            return res.status(400).send({ status: false, msg: "Plz Enter currencyID in INR format !!!" });
+        }
         if (!currencyFormat) {
             return res.status(400).send({ status: false, msg: "Plz Enter currencyFormat In Body !!!" });
         }
@@ -102,22 +118,21 @@ const validProduct = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "Plz Enter availableSizes In Body !!!" });
         }
 
-        if (availableSizes == 'S' || availableSizes == 'XS' || availableSizes == 'M' || availableSizes == 'X' || availableSizes == 'L' || availableSizes == 'XXL' || availableSizes == 'XL') {
+        if (!(availableSizes == 'S' || availableSizes == 'XS' || availableSizes == 'M' || availableSizes == 'X' || availableSizes == 'L' || availableSizes == 'XXL' || availableSizes == 'XL')) {
+            return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" })
+        }
             if (isNaN(installments) == true) {
                 return res.status(400).send({ status: false, msg: "Plz Enter Number In installments !!!" });
             }
 
             let files = req.files;
-            if (files && files.length > 0) {
-                next();
-            } else {
+            if (!(files && files.length > 0)) {
                 return res.status(400).send({ status: false, msg: "Enter File In Body !!!" });
-            }
-        } else {
-            return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
-        }
-    } catch (err) {
+            } 
+             next();       
+        } 
+         catch (err) {
         res.status(500).send({ status: false, msg: err.message });
     }
 }
-module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, validProduct };
+module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, isValidPrice,isValidSize,validProduct };
