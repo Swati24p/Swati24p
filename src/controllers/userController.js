@@ -270,9 +270,15 @@ const update = async function (req, res) {
 
         let updatedData = {}
         if (validator.isValid(fname)) {
+            if (!validator.isValidName(fname)) {
+                return res.status(400).send({ status: false, msg: "Invalid fname" })
+            }
             updatedData['fname'] = fname
         }
         if (validator.isValid(lname)) {
+            if (!validator.isValidName(lname)) {
+                return res.status(400).send({ status: false, msg: "Invalid lname" })
+            }
             updatedData['lname'] = lname
         }
 
@@ -284,7 +290,7 @@ const update = async function (req, res) {
 
 
             // Duplicate email
-            const duplicatemail = await UserModel.find({ email: email })
+            const duplicatemail = await UserModel.findOne({ email: email })
             if (duplicatemail.length) {
                 return res.status(400).send({ status: false, msg: "email id already exist" })
             }
@@ -298,7 +304,7 @@ const update = async function (req, res) {
             }
 
             // Duplicate phone
-            const duplicatePhone = await UserModel.find({ phone: phone })
+            const duplicatePhone = await UserModel.findOne({ phone: phone })
             if (duplicatePhone.length) {
                 return res.status(400).send({ status: false, msg: "phone number already exist" })
             }

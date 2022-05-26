@@ -38,7 +38,7 @@ const isValidNumber = function (value) {
 
 //valid type of name
 const isValidName = function (value) {
-    if (!(/^[A-Za-z ]+$/.test(value))) {
+    if (!(/^[A-Za-z ]+$/.test(value.trim()))) {
         return false
     }
     return true
