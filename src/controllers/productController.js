@@ -125,18 +125,29 @@ const putIdProducts = async (req, res) => {
 
         const { title, description, price, isFreeShipping, style, availableSizes, installments } = body
 
-        // if (price) {
-        //     if (!validator.isValidPrice(price)) {
-        //         return res.status(400).send({ status: false, msg: "Invalid price format" })
-        //     }
+        const findTitle = await productModel.findOne({ title: title });
+        if (findTitle) {
+            return res.status(400).send({ status: false, msg: "Title Is Already Exists, Please try different One!!!" });
+        }
 
-        // }
-        // if (availableSizes) {
-        //     if (!validator.isValidSize(availableSizes)) {
-        //         return res.status(400).send({ status: false, msg: " You trying to enter Invalid Size" })
-        //     }
-        // }
-        
+        if (price) {
+            if (!validator.isValidPrice(price)) {
+                return res.status(400).send({ status: false, msg: "price should be in Numeric format!!!" });
+            }
+        }
+
+        if (availableSizes) {
+            if (!validator.isValidSize(availableSizes)) {
+                return res.status(400).send({ status: false, msg: " You trying to enter Invalid  Size" })
+            }
+        }
+
+        if (installments){
+        if (isNaN(installments) == true) {
+            return res.status(400).send({ status: false, msg: "Please Enter Number In installments !!!" });
+        }
+        }
+
         const searchProduct = await productModel.findOne({ _id: params.productId, isDeleted: false })
         if (!searchProduct) {
             return res.status(404).send({ status: false, msg: "ProductId does not exist" })
