@@ -55,8 +55,8 @@ const isValidPincode = function (value) {
     return true
 };
 //
-const isValidPrice = function (value) {
-    if (!/^\d+(,\d{3})*(\.\d{1,2})?$/.test(value.trim())) {
+const isValidPrice = function(value) {
+    if(!/^\d+(,\d{3})*(\.\d{1,2})?$/.test(value)){
         return false
     }
     return true
@@ -79,6 +79,11 @@ const validProduct = async function (req, res, next) {
         if (!title) {
             return res.status(400).send({ status: false, msg: "Plz Enter title In Body !!!" });
         }
+
+        if(!isValidName(title)) {
+            return res.status(400).send({ status: false, msg: "Please mention valid title In Body !!!" });
+        }
+
         const findTitle = await productModel.findOne({ title: title });
         if (findTitle) {
             return res.status(400).send({ status: false, msg: "Title Is Already Exists, Plz Enter Another One !!!" });
@@ -121,7 +126,7 @@ const validProduct = async function (req, res, next) {
             } else {
                 return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
             }
-        }
+        };
 
         if (isNaN(installments) == true) {
             return res.status(400).send({ status: false, msg: "Plz Enter Number In installments !!!" });

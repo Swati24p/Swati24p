@@ -28,9 +28,9 @@ const postProducts = async function (req, res) {
 const getProduct = async (req, res) => {
     try {
         let filterQuery = req.query;
-        let { size, name, priceGreaterThan, priceLessThan, priceSort } = filterQuery;
+        let { size, name, priceGreaterThen, priceLessThen, priceSort } = filterQuery;
 
-        if (size || name || priceGreaterThan || priceLessThan || priceSort) {
+        if (size || name || priceGreaterThen || priceLessThen || priceSort) {
             let query = { isDeleted: false }
 
             if (size) {
@@ -41,16 +41,16 @@ const getProduct = async (req, res) => {
                 query['title'] = { $regex: name }
             }
 
-            if (priceGreaterThan) {
-                query['price'] = { $gt: priceGreaterThan }
+            if (priceGreaterThen) {
+                query['price'] = { $gt: priceGreaterThen }
             }
 
-            if (priceLessThan) {
-                query['price'] = { $lt: priceLessThan }
+            if (priceLessThen) {
+                query['price'] = { $lt: priceLessThen }
             }
 
-            if (priceGreaterThan && priceLessThan) {
-                query['price'] = { '$gt': priceGreaterThan, '$lt': priceLessThan }
+            if (priceGreaterThen && priceLessThen) {
+                query['price'] = { '$gt': priceGreaterThen, '$lt': priceLessThen }
             }
 
             if (priceSort) {
@@ -62,12 +62,12 @@ const getProduct = async (req, res) => {
             let getAllProduct = await productModel.find(query).sort({ price: priceSort })
 
             if (!(getAllProduct.length > 0)) {
-                return res.status(404).send({ status: false, message: "Products Not Found " })
+                return res.status(404).send({ status: false, message: "Products Not Found" })
             }
-            return res.status(200).send({ status: true, message: "Success", data: getAllProduct })
+            return res.status(200).send({ status: true, count: getAllProduct.length, message: "Success", data: getAllProduct })
         }
         else {
-            returnres.status(400).send({ status: false, message: "Invalid Request Query Params" })
+            return res.status(400).send({ status: false, message: "Invalid Request Query Params" })
         }
 
     }
@@ -82,7 +82,9 @@ const getProduct = async (req, res) => {
 const getIdproducts = async (req, res) => {
 
     try {
-        const data = req.params.productId
+        const data = req.params.productId;
+
+       
 
         //check wheather objectId is valid or not--
         if (!validator.isValidObjectId(data)) {
@@ -105,7 +107,7 @@ const getIdproducts = async (req, res) => {
 
 
 
-//***************************************************Update products by productId******************************************//
+//*************************************************************Update products by productId**********************************************************************//
 
 const putIdProducts = async (req, res) => {
 
@@ -125,22 +127,42 @@ const putIdProducts = async (req, res) => {
 
         const { title, description, price, isFreeShipping, style, availableSizes, installments } = body
 
+        const findTitle = await productModel.findOne({ title: title });
+        if (findTitle) {
+            return res.status(400).send({ status: false, msg: "Title Is Already Exists, Please try different One!!!" });
+        }
+
         if (price) {
             if (!validator.isValidPrice(price)) {
-                return res.status(400).send({ status: false, msg: "Invalid price format" })
+                return res.status(400).send({ status: false, msg: "price should be in Numeric format!!!" });
             }
-
         }
+
         if (availableSizes) {
             if (!validator.isValidSize(availableSizes)) {
                 return res.status(400).send({ status: false, msg: " You trying to enter Invalid  Size" })
             }
         }
 
+        if (installments){
+        if (isNaN(installments) == true) {
+            return res.status(400).send({ status: false, msg: "Please Enter Number In installments !!!" });
+        }
+        }
+
         const searchProduct = await productModel.findOne({ _id: params.productId, isDeleted: false })
         if (!searchProduct) {
             return res.status(404).send({ status: false, msg: "ProductId does not exist" })
         }
+
+        let clean = availableSizes.replace(/[^0-9A-Z]+/gi, "");
+        let values = clean.split('');
+        for (let i = 0; i < values.length; i++) {
+            if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
+            } else {
+                return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
+            }
+        };
 
         let files = req.files;
         if (files && files.length > 0) {
