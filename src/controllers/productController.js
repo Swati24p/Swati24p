@@ -107,52 +107,52 @@ const getIdproducts = async (req, res) => {
 
 //***************************************************Update products by productId******************************************//
 
-const putIdProducts = async (req, res) =>{
-    
-    try{
-              // Validate body
+const putIdProducts = async (req, res) => {
+
+    try {
+        // Validate body
         const body = req.body
-        if(!validator.isValidBody(body)) {
-           return res.status(400).send({ status: false, msg: "Product details must be present"})
-       }
-
-       const params = req.params;
-
-       //validate productId
-       if (!validator.isValidObjectId(params.productId)) {
-        return res.status(400).send({ status: false, message: "please enter valid productId" })
-    }
-
-       const {title, description, price, isFreeShipping, style, availableSizes, installments} = body
-
-       if(price){
-        if(!validator.isValidPrice(price)) {
-            return res.status(400).send({status: false, msg: "Invalid price format"})
+        if (!validator.isValidBody(body)) {
+            return res.status(400).send({ status: false, msg: "Product details must be present" })
         }
 
-       }
-       if(availableSizes){
-        if(!validator.isValidSize(availableSizes)) {
-            return res.status(400).send({status: false, msg: " You trying to enter Invalid  Size"})
-        }       
-       }
+        const params = req.params;
 
-       const searchProduct = await productModel.findOne({_id: params.productId, isDeleted: false})
-       if(!searchProduct) {
-           return res.status(404).send({status: false, msg: "ProductId does not exist"})
-       }
+        //validate productId
+        if (!validator.isValidObjectId(params.productId)) {
+            return res.status(400).send({ status: false, message: "please enter valid productId" })
+        }
 
-       let files = req.files;
-       if (files && files.length > 0) {
-       var uploadedFileURL = await aws.uploadFile( files[0] );
-       }
-       const finalproduct = {
-           title, description, price, currencyId: "₹", currencyFormat: "INR",isFreeShipping, productImage: uploadedFileURL, style: style, availableSizes, installments
-       }
+        const { title, description, price, isFreeShipping, style, availableSizes, installments } = body
 
-       let updatedProduct = await productModel.findOneAndUpdate({_id:params.productId}, finalproduct, {new:true})
-       return res.status(200).send({status: true, msg: "Updated Successfully", data: updatedProduct}) 
-       
+        if (price) {
+            if (!validator.isValidPrice(price)) {
+                return res.status(400).send({ status: false, msg: "Invalid price format" })
+            }
+
+        }
+        if (availableSizes) {
+            if (!validator.isValidSize(availableSizes)) {
+                return res.status(400).send({ status: false, msg: " You trying to enter Invalid  Size" })
+            }
+        }
+
+        const searchProduct = await productModel.findOne({ _id: params.productId, isDeleted: false })
+        if (!searchProduct) {
+            return res.status(404).send({ status: false, msg: "ProductId does not exist" })
+        }
+
+        let files = req.files;
+        if (files && files.length > 0) {
+            var uploadedFileURL = await aws.uploadFile(files[0]);
+        }
+        const finalproduct = {
+            title, description, price, currencyId: "₹", currencyFormat: "INR", isFreeShipping, productImage: uploadedFileURL, style: style, availableSizes, installments
+        }
+
+        let updatedProduct = await productModel.findOneAndUpdate({ _id: params.productId }, finalproduct, { new: true })
+        return res.status(200).send({ status: true, msg: "Updated Successfully", data: updatedProduct })
+
     }
     catch (error) {
         res.status(500).send({ Error: error.message })
@@ -162,29 +162,29 @@ const putIdProducts = async (req, res) =>{
 
 // ******************************************************** DELETE /products/:productId ******************************************************* //
 
-const deleteById = async function (req, res){
-    try{
-    
+const deleteById = async function (req, res) {
+    try {
+
         const productId = req.params.productId
-    
+
         if (!validator.isValidObjectId(productId)) {
-            return res.status(400).send({status:false, msg:`this ${productId} is not valid`})
+            return res.status(400).send({ status: false, msg: `this ${productId} is not valid` })
         }
-    
-        let deletedProduct = await productModel.findById({_id:productId})
+
+        let deletedProduct = await productModel.findById({ _id: productId })
         if (!deletedProduct) {
-            return res.status(404).send({status:false, msg:`this ${productId} is not exist in db`})
+            return res.status(404).send({ status: false, msg: `this ${productId} is not exist in db` })
         }
-    
+
         if (deletedProduct.isDeleted !== false) {
-            return res.status(400).send({status:false, msg:`this ${productId} is already deleted`})
+            return res.status(400).send({ status: false, msg: `this ${productId} is already deleted` })
         }
-    
-        await productModel.findByIdAndUpdate({_id:productId},{$set:{isDeleted:true, deletedAt: new Date()}},{new:true})
-    
-        return res.status(200).send({status:true, msg:"successfully deleted"})
-    
-        }
+
+        await productModel.findByIdAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
+
+        return res.status(200).send({ status: true, msg: "successfully deleted" })
+
+    }
 
     catch (err) {
         console.log("This is the error :", err.message)
@@ -194,7 +194,7 @@ const deleteById = async function (req, res){
 
 
 
-module.exports = { postProducts, getProduct, getIdproducts, putIdProducts ,deleteById};
+module.exports = { postProducts, getProduct, getIdproducts, putIdProducts, deleteById };
 
 
 /////////////////////////////////////////////////////////////// END OF PRODUCT CONTROLLER ///////////////////////////////////////////////////

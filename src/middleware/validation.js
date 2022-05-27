@@ -1,23 +1,21 @@
 const mongoose = require("mongoose");
 const productModel = require("../Models/productModel");
 
+
 //this validation will check the type of values--
 const isValid = function (value) {
     if (typeof value === 'undefined' || value === null) return false
     if (typeof value === 'string' && value.trim().length === 0) return false
     return true;
 };
-
 //this validbody checks the validation for the empty body
 const isValidBody = function (requestBody) {
     return Object.keys(requestBody).length > 0;
 };
-
 //checks wheather object id is valid or not
 const isValidObjectId = (ObjectId) => {
     return mongoose.Types.ObjectId.isValid(ObjectId)
 };
-
 //checs valid type of email--
 const isValidEmail = function (value) {
 
@@ -26,7 +24,6 @@ const isValidEmail = function (value) {
     }
     return true
 };
-
 //checks valid type of number
 const isValidNumber = function (value) {
 
@@ -36,7 +33,6 @@ const isValidNumber = function (value) {
     }
     return true
 };
-
 //valid type of name
 const isValidName = function (value) {
     if (!(/^[A-Za-z ]+$/.test(value.trim()))) {
@@ -44,7 +40,6 @@ const isValidName = function (value) {
     }
     return true
 };
-
 //
 const isValidPassword = function (value) {
     if (!(/^[a-zA-Z0-9'@&#.\s]{8,15}$/.test(value))) {
@@ -52,7 +47,6 @@ const isValidPassword = function (value) {
     }
     return true
 };
-
 //
 const isValidPincode = function (value) {
     if (!(/^\d{6}$/.test(value))) {
@@ -61,16 +55,17 @@ const isValidPincode = function (value) {
     return true
 };
 //
-const isValidPrice = function(value) {
-    if(!/^\d+(,\d{3})*(\.\d{1,2})?$/.test(value.trim())){
+const isValidPrice = function (value) {
+    if (!/^\d+(,\d{3})*(\.\d{1,2})?$/.test(value.trim())) {
         return false
     }
     return true
-}
+};
 //
-const isValidSize = function(value) {
+const isValidSize = function (value) {
     return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) !== -1
-}
+};
+
 
 const validProduct = async function (req, res, next) {
     try {
@@ -79,7 +74,7 @@ const validProduct = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "Plz Enter Data Inside Body !!!" });
         }
 
-        const { title, description, price, currencyId, currencyFormat,  availableSizes, installments } = body;
+        const { title, description, price, currencyId, currencyFormat, availableSizes, installments } = body;
 
         if (!title) {
             return res.status(400).send({ status: false, msg: "Plz Enter title In Body !!!" });
@@ -96,14 +91,14 @@ const validProduct = async function (req, res, next) {
         if (!price) {
             return res.status(400).send({ status: false, msg: "Plz Enter price In Body !!!" });
         }
-        if(!isValidPrice(price)){
+        if (!isValidPrice(price)) {
             return res.status(400).send({ status: false, msg: "Plz Enter valid format price In Body !!!" });
         }
 
         if (!currencyId) {
             return res.status(400).send({ status: false, msg: "Plz Enter currencyId In Body !!!" });
         }
-        if(currencyId != 'INR'){
+        if (currencyId != 'INR') {
             return res.status(400).send({ status: false, msg: "Plz Enter currencyID in INR format !!!" });
         }
         if (!currencyFormat) {
@@ -118,21 +113,30 @@ const validProduct = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "Plz Enter availableSizes In Body !!!" });
         }
 
-        if (!(availableSizes == 'S' || availableSizes == 'XS' || availableSizes == 'M' || availableSizes == 'X' || availableSizes == 'L' || availableSizes == 'XXL' || availableSizes == 'XL')) {
-            return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" })
-        }
-            if (isNaN(installments) == true) {
-                return res.status(400).send({ status: false, msg: "Plz Enter Number In installments !!!" });
-            }
 
-            let files = req.files;
-            if (!(files && files.length > 0)) {
-                return res.status(400).send({ status: false, msg: "Enter File In Body !!!" });
-            } 
-             next();       
-        } 
-         catch (err) {
+        let clean = availableSizes.replace(/[^0-9A-Z]+/gi, "");
+        let values = clean.split('');
+        for (let i = 0; i < values.length; i++) {
+            if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
+            } else {
+                return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
+            }
+        }
+
+        if (isNaN(installments) == true) {
+            return res.status(400).send({ status: false, msg: "Plz Enter Number In installments !!!" });
+        }
+
+        let files = req.files;
+        if (!(files && files.length > 0)) {
+            return res.status(400).send({ status: false, msg: "Enter File In Body !!!" });
+        }
+        next();
+    }
+    catch (err) {
         res.status(500).send({ status: false, msg: err.message });
     }
-}
-module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, isValidPrice,isValidSize,validProduct };
+};
+
+
+module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, isValidPrice, isValidSize, validProduct };
