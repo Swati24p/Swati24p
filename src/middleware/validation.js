@@ -68,8 +68,19 @@ const isValidPrice = function(value) {
     return true
 }
 //
-const isValidSize = function(value) {
-    return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) !== -1
+
+const isValidSize = (Arr) => {
+    let newArr = []
+    if (!Arr.length > 0)
+        return false
+
+    for (let i = 0; i < Arr.length; i++) {
+        if (!["S", "XS", "M", "X", "L", "XXL", "XL"].includes(Arr[i].toUpperCase())) {
+            return false
+        }
+        newArr.push(Arr[i].toUpperCase())
+    }
+    return newArr
 }
 
 const validProduct = async function (req, res, next) {
@@ -117,9 +128,9 @@ const validProduct = async function (req, res, next) {
         if (!availableSizes) {
             return res.status(400).send({ status: false, msg: "Plz Enter availableSizes In Body !!!" });
         }
-
-        if (!(availableSizes == 'S' || availableSizes == 'XS' || availableSizes == 'M' || availableSizes == 'X' || availableSizes == 'L' || availableSizes == 'XXL' || availableSizes == 'XL')) {
-            return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" })
+        const availableSizesArr = JSON.parse(availableSizes)
+        if (!isValidSize(availableSizesArr)) {
+            return res.status(400).send({ status: false, msg: `please Enter Available Size from ["S", "XS", "M", "X", "L", "XXL", "XL"]`})
         }
             if (isNaN(installments) == true) {
                 return res.status(400).send({ status: false, msg: "Plz Enter Number In installments !!!" });
@@ -135,4 +146,4 @@ const validProduct = async function (req, res, next) {
         res.status(500).send({ status: false, msg: err.message });
     }
 }
-module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, isValidPrice,isValidSize,validProduct };
+module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, isValidPrice, isValidSize ,validProduct };

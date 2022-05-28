@@ -13,8 +13,8 @@ const postProducts = async function (req, res) {
         let files = req.files;
         let uploadedFileURL = await aws.uploadFile(files[0]);
         productImage = uploadedFileURL;
-
-        let userData = { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments };
+        const availableSizesArr = JSON.parse(availableSizes)
+        let userData = { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes:validator.isValidSize(availableSizesArr), installments };
         const savedData = await productModel.create(userData);
         res.status(201).send({ status: true, message: 'Success', data: savedData });
 
@@ -125,6 +125,10 @@ const putIdProducts = async (req, res) =>{
 
        const {title, description, price, isFreeShipping, style, availableSizes, installments} = body
 
+       let dupliTitle = await productModel.findOne({ title: title })
+       if (dupliTitle) {
+           return res .status(400).send({ status: false, message: "Title already exists" })
+       }
        if(price){
         if(!validator.isValidPrice(price)) {
             return res.status(400).send({status: false, msg: "Invalid price format"})
@@ -132,9 +136,13 @@ const putIdProducts = async (req, res) =>{
 
        }
        if(availableSizes){
-        if(!validator.isValidSize(availableSizes)) {
-            return res.status(400).send({status: false, msg: " You trying to enter Invalid  Size"})
-        }       
+        const availableSizesArr = JSON.parse(availableSizes)
+        if (!validator.isValidSize(availableSizesArr)) {
+            return res
+                .status(400)
+                .send({ status: false, message: `please Provide Available Size from ${["S", "XS", "M", "X", "L", "XXL", "XL"]}` })
+        }
+      
        }
 
        const searchProduct = await productModel.findOne({_id: params.productId, isDeleted: false})
@@ -146,8 +154,9 @@ const putIdProducts = async (req, res) =>{
        if (files && files.length > 0) {
        var uploadedFileURL = await aws.uploadFile( files[0] );
        }
+       const availableSizesArr = JSON.parse(availableSizes)
        const finalproduct = {
-           title, description, price, currencyId: "₹", currencyFormat: "INR",isFreeShipping, productImage: uploadedFileURL, style: style, availableSizes, installments
+           title, description, price, currencyId: "₹", currencyFormat: "INR",isFreeShipping, productImage: uploadedFileURL, style: style, availableSizes: validator.isValidSize(availableSizesArr), installments
        }
 
        let updatedProduct = await productModel.findOneAndUpdate({_id:params.productId}, finalproduct, {new:true})
