@@ -3,12 +3,12 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/userModel");
 const validator = require('../middleware/validation');
 const aws = require('../aws/aws')
-
+const validUrl = require('valid-url');
 // ********************************************************************** POST /register ************************************************************ //
 const createUser = async function (req, res) {
     try {
         let body = JSON.parse(JSON.stringify(req.body))
-      
+
         //Validate body 
         if (!validator.isValidBody(body)) {
             return res.status(400).send({ status: false, msg: "User body should not be empty" });
@@ -129,7 +129,9 @@ const createUser = async function (req, res) {
         let files = req.files;
         if (files && files.length > 0) {
             let uploadedFileURL = await aws.uploadFile(files[0]);
-
+            if (!validUrl.isUri(uploadedFileURL)) {
+                return res.status(400).send({ status: false, msg: 'invalid uploadFileUrl' })
+            }
             // encrypted password
             let encryptPassword = await bcrypt.hash(password, 12)
 
@@ -386,6 +388,9 @@ const update = async function (req, res) {
         let files = req.files;
         if (files && files.length > 0) {
             let uploadedFileURL = await aws.uploadFile(files[0]);
+            if (!validUrl.isUri(uploadedFileURL)) {
+                return res.status(400).send({ status: false, msg: 'invalid uploadFileUrl' })
+            }
             if (uploadedFileURL) {
                 updatedData['profileImage'] = uploadedFileURL
             }

@@ -62,28 +62,10 @@ const isValidPrice = function(value) {
     return true
 };
 //
-<<<<<<< HEAD
-
-const isValidSize = (Arr) => {
-    let newArr = []
-    if (!Arr.length > 0)
-        return false
-
-    for (let i = 0; i < Arr.length; i++) {
-        if (!["S", "XS", "M", "X", "L", "XXL", "XL"].includes(Arr[i].toUpperCase())) {
-            return false
-        }
-        newArr.push(Arr[i].toUpperCase())
-    }
-    return newArr
-}
-=======
 const isValidSize = function (value) {
     return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) !== -1
 };
-
->>>>>>> bca27c91bbd4fa00dd2244c8652d565331ae397a
-
+//
 const validProduct = async function (req, res, next) {
     try {
         let body = JSON.parse(JSON.stringify(req.body));
@@ -134,17 +116,6 @@ const validProduct = async function (req, res, next) {
         if (!availableSizes) {
             return res.status(400).send({ status: false, msg: "Plz Enter availableSizes In Body !!!" });
         }
-<<<<<<< HEAD
-        const availableSizesArr = JSON.parse(availableSizes)
-        if (!isValidSize(availableSizesArr)) {
-            return res.status(400).send({ status: false, msg: `please Enter Available Size from ["S", "XS", "M", "X", "L", "XXL", "XL"]`})
-        }
-            if (isNaN(installments) == true) {
-                return res.status(400).send({ status: false, msg: "Plz Enter Number In installments !!!" });
-            }
-=======
-
->>>>>>> bca27c91bbd4fa00dd2244c8652d565331ae397a
 
         let clean = availableSizes.replace(/[^0-9A-Z]+/gi, "");
         let values = clean.split('');
@@ -168,12 +139,7 @@ const validProduct = async function (req, res, next) {
     catch (err) {
         res.status(500).send({ status: false, msg: err.message });
     }
-<<<<<<< HEAD
-}
-module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, isValidPrice, isValidSize ,validProduct };
-=======
 };
 
 
 module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, isValidPrice, isValidSize, validProduct };
->>>>>>> bca27c91bbd4fa00dd2244c8652d565331ae397a
