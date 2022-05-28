@@ -7,13 +7,9 @@ const aws = require('../aws/aws')
 // ********************************************************************** POST /register ************************************************************ //
 const createUser = async function (req, res) {
     try {
-        // let data = req.body
         let body = JSON.parse(JSON.stringify(req.body))
-        // body.address = JSON.parse(body.address)
-
-
+      
         //Validate body 
-
         if (!validator.isValidBody(body)) {
             return res.status(400).send({ status: false, msg: "User body should not be empty" });
         }
@@ -76,10 +72,10 @@ const createUser = async function (req, res) {
         }
         address = JSON.parse(address)
         if (typeof address != "object") {
-            
+
             return res.status(400).send({ status: false, message: "address should be an object" })
         }
-       // address = JSON.parse(address)
+        // address = JSON.parse(address)
         // Validate shipping address
         if (!address.shipping) {
             return res.status(400).send({ status: false, message: "Shipping address is required" })
@@ -110,8 +106,8 @@ const createUser = async function (req, res) {
         if (!validator.isValid(address.billing.street && address.billing.city && address.billing.pincode)) {
             return res.status(400).send({ status: false, message: "Billing address details is/are missing" })
         }
-      
-        
+
+
         // Validate billing pincode
         if (!validator.isValidPincode(address.billing.pincode)) {
             return res.status(400).send({ status: false, msg: "Invalid billing pincode" })
@@ -154,7 +150,6 @@ const createUser = async function (req, res) {
         res.status(500).send({ msg: "Error", error: err.message })
     }
 };
-
 
 
 //================================================================LogIn Api=====================================================================//
@@ -395,7 +390,8 @@ const update = async function (req, res) {
                 updatedData['profileImage'] = uploadedFileURL
             }
         }
-        body.address = JSON.parse(body.address)
+
+        //body.address = JSON.parse(body.address)
         const updated = await UserModel.findOneAndUpdate({ _id: userId }, updatedData, { new: true })
         return res.status(201).send({ status: true, data: updated })
     }

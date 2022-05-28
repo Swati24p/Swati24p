@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { createUser, login, getUser, update } = require("../controllers/UserController");
-const { postProducts, getProduct, getIdproducts, putIdProducts,deleteById } = require("../controllers/productController");
+const { postProducts, getProduct, getIdproducts, putIdProducts, deleteById } = require("../controllers/productController");
 const auth = require('../middleware/auth');
 const valid = require("../middleware/validation");
-
 
 
 // FEATURE-1 User APIs
@@ -18,8 +17,7 @@ router.post("/products", valid.validProduct, postProducts);
 router.get("/products", getProduct);
 router.get("/products/:productId", getIdproducts);
 router.put("/products/:productId", putIdProducts);
- router.delete("/products/:productId", deleteById);
-
+router.delete("/products/:productId", deleteById);
 
 // FEATURE-3 Cart APIs
 // router.post("/users/:userId/cart");
@@ -27,11 +25,9 @@ router.put("/products/:productId", putIdProducts);
 // router.get("/users/:userId/cart");
 // router.delete("/users/:userId/cart");
 
-
 // FEATURE-4 Checkout/Order APIs
 // router.post("/users/:userId/orders");
 // router.put("/users/:userId/orders");
-
 
 
 module.exports = router;
