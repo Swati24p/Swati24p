@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const chalk = require("chalk")
 const cartModel = require("../Models/cartModel");
 const validator = require('../middleware/validation');
 const aws = require('../aws/aws')
@@ -9,7 +10,7 @@ const UserModel = require("../Models/userModel");
 const createCart = async (req, res) => {
     try{
         const userIdFromParams = req.params.userId
-       // const userIdFromToken = req.userId
+       
         const data = req.body
         const {productId, quantity} = data
 
@@ -83,7 +84,7 @@ const createCart = async (req, res) => {
             const items = isOldUser.items
             for(let i=0; i<items.length; i++){
                 if(items[i].productId.toString() === productId){
-                    console.log("productIds are similar")
+                    console.log(chalk.bgYellowBright("productId are similars"))
                     items[i].quantity += quantity
                     var newCartData = {
                         items : items,
@@ -99,7 +100,7 @@ const createCart = async (req, res) => {
                 }
             }
             if (flag === 0){
-                console.log("productIds are not similar")
+                console.log(chalk.bgBlueBright("productIds are not similar"))
                 let addItems = {
                     productId : productId,
                     quantity : quantity
