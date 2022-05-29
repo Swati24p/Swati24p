@@ -4,7 +4,9 @@ const UserModel = require("../Models/userModel");
 const validator = require('../middleware/validation');
 const aws = require('../aws/aws')
 const validUrl = require('valid-url');
-// ********************************************************************** POST /register ************************************************************ //
+
+
+
 const createUser = async function (req, res) {
     try {
         let body = JSON.parse(JSON.stringify(req.body))
@@ -154,7 +156,6 @@ const createUser = async function (req, res) {
 };
 
 
-//================================================================LogIn Api=====================================================================//
 
 const login = async function (req, res) {
     try {
@@ -207,8 +208,6 @@ const login = async function (req, res) {
 
 
 
-//==========================================================Get User api================================================================================//
-
 const getUser = async (req, res) => {
     try {
         let userId = req.params.userId
@@ -245,7 +244,7 @@ const getUser = async (req, res) => {
     }
 };
 
-//======================================================================Update api ====================================================================//
+
 
 const update = async function (req, res) {
     try {

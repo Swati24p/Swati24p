@@ -55,8 +55,8 @@ const isValidPincode = function (value) {
     return true
 };
 //
-const isValidPrice = function(value) {
-    if(!/^\d+(,\d{3})*(\.\d{1,2})?$/.test(value)){
+const isValidPrice = function (value) {
+    if (!/^\d+(,\d{3})*(\.\d{1,2})?$/.test(value)) {
         return false
     }
     return true
@@ -65,7 +65,9 @@ const isValidPrice = function(value) {
 const isValidSize = function (value) {
     return ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(value) !== -1
 };
-//
+
+
+
 const validProduct = async function (req, res, next) {
     try {
         let body = JSON.parse(JSON.stringify(req.body));
@@ -79,7 +81,7 @@ const validProduct = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "Plz Enter title In Body !!!" });
         }
 
-        if(!isValidName(title)) {
+        if (!isValidName(title)) {
             return res.status(400).send({ status: false, msg: "Please mention valid title In Body !!!" });
         }
 
