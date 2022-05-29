@@ -4,7 +4,7 @@ const validator = require('../middleware/validation');
 const aws = require('../aws/aws')
 const productModel = require("../Models/productModel");
 const UserModel = require("../Models/userModel");
-
+const chalk = require("chalk")
 //*********************************************************POST /users/:userId/cart (Add to cart)******************************************************************************//
 
 const createCart = async (req, res) => {
@@ -84,7 +84,7 @@ const createCart = async (req, res) => {
             const items = isOldUser.items
             for(let i=0; i<items.length; i++){
                 if(items[i].productId.toString() === productId){
-                    console.log(chalk.bgYellowBright("productId are similars"))
+                    console.log(chalk.bgBlue("productId are similars"))
                     items[i].quantity += quantity
                     var newCartData = {
                         items : items,
@@ -100,7 +100,7 @@ const createCart = async (req, res) => {
                 }
             }
             if (flag === 0){
-                console.log(chalk.bgBlueBright("productIds are not similar"))
+                console.log(chalk.yellow("productIds are not similar"))
                 let addItems = {
                     productId : productId,
                     quantity : quantity
@@ -108,7 +108,7 @@ const createCart = async (req, res) => {
                 const saveData = await cartModel.findOneAndUpdate(
                 {userId : userIdFromParams},
                 {$addToSet : {items : addItems}, $inc : {totalItems : 1, totalPrice: ((findProduct.price)*quantity)}},
-                {new:true, upsert:true})
+                {new:true}).select({"items._id":0})
                 return res.status(201).send({status:true, message:"product added to the cart successfully", data:saveData})
             }
         }
