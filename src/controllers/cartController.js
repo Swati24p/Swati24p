@@ -5,6 +5,7 @@ const UserModel = require("../Models/userModel");
 const chalk = require("chalk");
 
 
+//************************************************************CREATE CART API***********************************************************************//
 
 const createCart = async (req, res) => {
     try {
@@ -24,7 +25,7 @@ const createCart = async (req, res) => {
         }
 
         if (req['userId'] != userIdFromParams) {
-            return res.status(403).send({
+            return res.status(401).send({
                 status: false,
                 message: "Unauthorized access.",
             });
@@ -120,6 +121,7 @@ const createCart = async (req, res) => {
 };
 
 
+//***************************************************************UPDATE CART API********************************************************************//
 
 const updateCart = async function (req, res) {
     const body = req.body;
@@ -165,6 +167,7 @@ const updateCart = async function (req, res) {
 };
 
 
+//****************************************************************GET CART API ************************************************************************//
 
 const getCart = async (req, res) => {
     try {
@@ -204,6 +207,7 @@ const getCart = async (req, res) => {
 };
 
 
+//****************************************************************DELETE CART API********************************************************************//
 
 const delCart = async (req, res) => {
     try {
@@ -246,4 +250,4 @@ const delCart = async (req, res) => {
 
 
 
-module.exports = { getCart, updateCart, delCart, createCart };
+module.exports = { createCart, updateCart, getCart,  delCart };
