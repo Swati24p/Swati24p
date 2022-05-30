@@ -5,6 +5,7 @@ const UserModel = require("../Models/userModel");
 const chalk = require("chalk");
 
 
+//************************************************************CREATE CART API***********************************************************************//
 
 const createCart = async (req, res) => {
     try {
@@ -12,6 +13,11 @@ const createCart = async (req, res) => {
 
         const data = req.body
         const { productId, quantity } = data
+
+        //Validate body 
+        if (!validator.isValidBody(data)) {
+            return res.status(400).send({ status: false, msg: "please provide Cart details" });
+        }
 
         if (!validator.isValidObjectId(userIdFromParams)) {
             return res.status(400).send({ status: false, msg: "userId is invalid" });
@@ -24,7 +30,7 @@ const createCart = async (req, res) => {
         }
 
         if (req['userId'] != userIdFromParams) {
-            return res.status(403).send({
+            return res.status(401).send ({
                 status: false,
                 message: "Unauthorized access.",
             });
@@ -120,6 +126,7 @@ const createCart = async (req, res) => {
 };
 
 
+//***************************************************************UPDATE CART API********************************************************************//
 
 const updateCart = async function (req, res) {
     try {
@@ -184,6 +191,7 @@ const updateCart = async function (req, res) {
 };
 
 
+//****************************************************************GET CART API ************************************************************************//
 
 const getCart = async (req, res) => {
     try {
@@ -223,6 +231,7 @@ const getCart = async (req, res) => {
 };
 
 
+//****************************************************************DELETE CART API********************************************************************//
 
 const delCart = async (req, res) => {
     try {
@@ -250,14 +259,14 @@ const delCart = async (req, res) => {
         let checkCart = await cartModel.findOne({ userId: userId })
 
         if (!checkCart) {
-            return res.status(404).send({ status: false, message: "Cart Not Exist With This User" })
+            return res.status(404).send({ status: false, message: "Cart does Not Exist With This User" })
         }
 
         let deleteCart = await cartModel.findOneAndUpdate({ userId: userId }, { items: [], totalPrice: 0, totalItems: 0 }, { new: true })
-
+    
         return res.status(200).send({ status: false, message: "Cart Successfully Deleted", data: deleteCart })
-
     }
+        
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
@@ -265,4 +274,4 @@ const delCart = async (req, res) => {
 
 
 
-module.exports = { getCart, updateCart, delCart, createCart };
+module.exports = { createCart, updateCart, getCart,  delCart };

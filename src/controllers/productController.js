@@ -87,8 +87,6 @@ const getIdproducts = async (req, res) => {
     try {
         const data = req.params.productId;
 
-       
-
         //check wheather objectId is valid or not--
         if (!validator.isValidObjectId(data)) {
             return res.status(400).send({ status: false, message: "please enter valid productId" })
