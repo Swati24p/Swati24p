@@ -119,7 +119,7 @@ const validProduct = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "Plz Enter availableSizes In Body !!!" });
         }
 
-        let clean = availableSizes.replace(/[^0-9A-Z]+/gi, "");
+        let clean = availableSizes.replace(/[^A-Z]+/gi, "");
         let values = clean.split('');
         for (let i = 0; i < values.length; i++) {
             if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
