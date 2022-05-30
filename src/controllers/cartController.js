@@ -124,6 +124,7 @@ const createCart = async (req, res) => {
 //***************************************************************UPDATE CART API********************************************************************//
 
 const updateCart = async function (req, res) {
+
     const body = req.body;
     if (Object.keys(body).length <= 0) {
         return res.status(400).send({ status: false, msg: "Plz enter data in body !!!" });
@@ -139,12 +140,12 @@ const updateCart = async function (req, res) {
         return res.status(400).send({ status: false, msg: "Plz enter productId in body !!!" });
     }
 
-    const removeProduct = req.body.removeProduct;
-    if (!removeProduct) {
-        return res.status(400).send({ status: false, msg: "Plz enter removeProduct in body !!!" });
-    }
+    // const removeProduct = req.body.removeProduct;
+    // if (!removeProduct) {
+    //     return res.status(400).send({ status: false, msg: "Plz enter removeProduct in body !!!" });
+    // }
 
-    const cartExist = await productModel.findById(cardId);
+    const cartExist = await cartModel.findById(cardId);
     if (!cartExist) {
         return res.status(400).send({ status: false, msg: "Card does not exist !!!" });
     }
@@ -155,15 +156,18 @@ const updateCart = async function (req, res) {
         return res.status(400).send({ status: false, msg: "Not authorized !!!" });
     }
 
-    const userExist = await UserModel.findOne({ _id: userId });
-    if (!userExist) {
-        return res.status(400).send({ status: false, msg: "User does not exists !!!" });
-    }
+    // const userExist = await UserModel.findOne({ _id: userId });
+    // if (!userExist) {
+    //     return res.status(400).send({ status: false, msg: "User does not exists !!!" });
+    // }
 
-    const productExists = await productModel.findById(productId);
-    if (!productExists) {
-        return res.status(400).send({ status: false, msg: "Product not found !!!" });
-    }
+    // const productExists = await productModel.find({ _id: productId, isDeleted: false });
+    // if (!productExists) {
+    //     return res.status(400).send({ status: false, msg: "Product not found !!!" });
+    // }
+
+   
+    res.send("hey")
 };
 
 
