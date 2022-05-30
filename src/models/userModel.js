@@ -4,12 +4,12 @@ const userSchema = new mongoose.Schema({
     fname: {
         type: String,
         required: true,
-        trim:true
+        trim: true
     },
     lname: {
         type: String,
         required: true,
-        trim:true
+        trim: true
     },
     email: {
         type: String,
@@ -43,6 +43,6 @@ const userSchema = new mongoose.Schema({
             pincode: { type: Number, required: true }
         }
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 module.exports = mongoose.model('user', userSchema)

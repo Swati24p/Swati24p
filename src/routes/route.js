@@ -3,7 +3,7 @@ const router = express.Router();
 const { createUser, login, getUser, update } = require("../controllers/UserController");
 const { postProducts, getProduct, getIdproducts, putIdProducts, deleteById } = require("../controllers/productController");
 const { createCart, updateCart, getCart, delCart } = require("../controllers/cartController");
-const { postOrder,putOrder } = require("../controllers/orderController");
+const { postOrder, putOrder } = require("../controllers/orderController");
 const auth = require('../middleware/auth');
 const valid = require("../middleware/validation");
 
@@ -31,7 +31,7 @@ router.delete("/users/:userId/cart", auth.authentication, delCart);
 
 
 // FEATURE-4 Checkout/Order APIs
-router.post("/users/:userId/orders", postOrder);
+router.post("/users/:userId/orders", auth.authentication, postOrder);
 router.put("/users/:userId/orders", putOrder);
 
 

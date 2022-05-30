@@ -12,11 +12,11 @@ const postProducts = async function (req, res) {
 
         let files = req.files;
         let uploadedFileURL = await aws.uploadFile(files[0]);
-        if(!validUrl.isUri(uploadedFileURL)){
-            return res.status(400).send({status:false, msg:'invalid uploadFileUrl'})
+        if (!validUrl.isUri(uploadedFileURL)) {
+            return res.status(400).send({ status: false, msg: 'invalid uploadFileUrl' })
         }
         productImage = uploadedFileURL;
-       // const availableSizesArr = JSON.parse(availableSizes)
+        // const availableSizesArr = JSON.parse(availableSizes)
         let userData = { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments };
         const savedData = await productModel.create(userData);
         res.status(201).send({ status: true, message: 'Success', data: savedData });
@@ -132,7 +132,7 @@ const putIdProducts = async (req, res) => {
         if (findTitle) {
             return res.status(400).send({ status: false, msg: "Title Is Already Exists, Please try different One!!!" });
         }
-        
+
         if (price) {
             if (!validator.isValidPrice(price)) {
                 return res.status(400).send({ status: false, msg: "price should be in valid format like numeric or upto two decimal places format!!!" });
@@ -150,10 +150,10 @@ const putIdProducts = async (req, res) => {
             };
         }
 
-        if (installments){
-        if (isNaN(installments) == true) {
-            return res.status(400).send({ status: false, msg: "Please Enter Number In installments !!!" });
-        }
+        if (installments) {
+            if (isNaN(installments) == true) {
+                return res.status(400).send({ status: false, msg: "Please Enter Number In installments !!!" });
+            }
         }
 
         const searchProduct = await productModel.findOne({ _id: params.productId, isDeleted: false })
@@ -164,10 +164,10 @@ const putIdProducts = async (req, res) => {
         let files = req.files;
         if (files && files.length > 0) {
             var uploadedFileURL = await aws.uploadFile(files[0]);
-            if(!validUrl.isUri(uploadedFileURL)){
-                return res.status(400).send({status:false, msg:'invalid uploadFileUrl'})
+            if (!validUrl.isUri(uploadedFileURL)) {
+                return res.status(400).send({ status: false, msg: 'invalid uploadFileUrl' })
             }
-        }else {
+        } else {
             return res.status(400).send({ status: false, msg: "No file found" });
         }
         const finalproduct = {
@@ -177,7 +177,7 @@ const putIdProducts = async (req, res) => {
         let updatedProduct = await productModel.findOneAndUpdate({ _id: params.productId }, finalproduct, { new: true })
         return res.status(200).send({ status: true, msg: "Updated Successfully", data: updatedProduct })
 
-    } 
+    }
     catch (error) {
         res.status(500).send({ Error: error.message })
     }

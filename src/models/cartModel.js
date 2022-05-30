@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Schema.Types.ObjectId
+const ObjectId = mongoose.Schema.Types.ObjectId;
+
 const cartSchema = new mongoose.Schema({
     userId: {
         type: ObjectId,
@@ -32,6 +33,6 @@ const cartSchema = new mongoose.Schema({
         required: true
         //comment: "Holds total number of items in the cart"}, 
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 module.exports = mongoose.model('cart', cartSchema);

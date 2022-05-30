@@ -5,12 +5,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        trim:true
+        trim: true
     },
     description: {
         type: String,
         required: true,
-        trim:true
+        trim: true
     },
     price: {
         type: Number,
@@ -32,18 +32,14 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },  // s3 link
-
-    style: { type: String, trim:true },
-
+    style: { type: String, trim: true },
     availableSizes: {
         type: [String],
         required: true,
         trim: true
         // enum: ['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL']
     },
-
     installments: { type: Number },
-    
     deletedAt: {
         type: Date
         //default: null
@@ -52,6 +48,6 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 module.exports = mongoose.model('product', productSchema);
