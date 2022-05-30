@@ -135,7 +135,7 @@ const updateCart = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Plz enter data in body !!!" });
         }
 
-        const cardId = req.body.cardId;
+        const cardIt = req.body.cardIt;
         if (!cardId) {
             return res.status(400).send({ status: false, msg: "Plz enter cardId in body !!!" });
         }
