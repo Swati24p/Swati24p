@@ -128,53 +128,6 @@ const createCart = async (req, res) => {
 
 //***************************************************************UPDATE CART API********************************************************************//
 
-const updateCart = async function (req, res) {
-
-    const body = req.body;
-    if (Object.keys(body).length <= 0) {
-        return res.status(400).send({ status: false, msg: "Plz enter data in body !!!" });
-    }
-
-    const cardId = req.body.cardId;
-    if (!cardId) {
-        return res.status(400).send({ status: false, msg: "Plz enter cardId in body !!!" });
-    }
-
-    const productId = req.body.productId;
-    if (!productId) {
-        return res.status(400).send({ status: false, msg: "Plz enter productId in body !!!" });
-    }
-
-    // const removeProduct = req.body.removeProduct;
-    // if (!removeProduct) {
-    //     return res.status(400).send({ status: false, msg: "Plz enter removeProduct in body !!!" });
-    // }
-
-    const cartExist = await cartModel.findById(cardId);
-    if (!cartExist) {
-        return res.status(400).send({ status: false, msg: "Card does not exist !!!" });
-    }
-
-    const userId = req.params.userId;
-    const jwtUserId = req.userId;
-    if (userId != jwtUserId) {
-        return res.status(400).send({ status: false, msg: "Not authorized !!!" });
-    }
-
-    // const userExist = await UserModel.findOne({ _id: userId });
-    // if (!userExist) {
-    //     return res.status(400).send({ status: false, msg: "User does not exists !!!" });
-    // }
-
-    // const productExists = await productModel.find({ _id: productId, isDeleted: false });
-    // if (!productExists) {
-    //     return res.status(400).send({ status: false, msg: "Product not found !!!" });
-    // }
-
-   
-    res.send("hey")
-};
-
 
 //****************************************************************GET CART API ************************************************************************//
 
