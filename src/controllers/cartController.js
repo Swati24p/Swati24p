@@ -14,6 +14,11 @@ const createCart = async (req, res) => {
         const data = req.body
         const { productId, quantity } = data
 
+        //Validate body 
+        if (!validator.isValidBody(data)) {
+            return res.status(400).send({ status: false, msg: "please provide Cart details" });
+        }
+
         if (!validator.isValidObjectId(userIdFromParams)) {
             return res.status(400).send({ status: false, msg: "userId is invalid" });
         }
@@ -239,14 +244,14 @@ const delCart = async (req, res) => {
         let checkCart = await cartModel.findOne({ userId: userId })
 
         if (!checkCart) {
-            return res.status(404).send({ status: false, message: "Cart Not Exist With This User" })
+            return res.status(404).send({ status: false, message: "Cart does Not Exist With This User" })
         }
 
         let deleteCart = await cartModel.findOneAndUpdate({ userId: userId }, { items: [], totalPrice: 0, totalItems: 0 }, { new: true })
-
+    
         return res.status(200).send({ status: false, message: "Cart Successfully Deleted", data: deleteCart })
-
     }
+        
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
