@@ -491,3 +491,10 @@ Refer below sample
                 "pincode": 452001
             }
         },
+
+
+
+
+         if (Object.keys(body).length <= 0) {
+            return res.status(400).send({ status: false, msg: "Plz enter data in body !!!" });
+        }
