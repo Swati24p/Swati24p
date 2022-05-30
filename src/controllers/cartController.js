@@ -163,27 +163,6 @@ const updateCart = async function (req, res) {
             return res.status(404).send({ status: false, msg: "Product not found" })
         }
         var getPrice = findProduct.price;
-
-
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].productId == productId) {
-                let totelProductprice = items[i].quantity * getPrice
-
-                if (removeProduct === 0) {
-                    const updateProductItem = await cartModel.findOneAndUpdate({ userId: userId }, { $pull: { items: { productId: productId } }, totalPrice: searchCart.totalPrice - totelProductprice, totalItems: searchCart.totalItems - 1 }, { new: true })
-                    return res.status(200).send({ status: true, msg: 'sucessfully removed product', data: updateProductItem })
-
-                }
-                if (removeProduct === 1) {
-                    if (items[i].quantity === 1 && removeProduct === 1) {
-                        const removeCart = await cartModel.findOneAndUpdate({ userId: userId }, { $pull: { items: { productId: productId } }, totalPrice: searchCart.totalPrice - totelProductprice, totalItems: searchCart.totalItems - 1 }, { new: true })
-                        return res.status(200).send({ status: true, msg: 'sucessfully removed product or cart is empty', data: removeCart })
-                    }
-                    items[i].quantity = items[i].quantity - 1
-                    const updateCart = await cartModel.findOneAndUpdate({ userId: userId }, { items: items, totalPrice: searchCart.totalPrice - getPrice }, { new: true });
-                    return res.status(200).send({ status: true, msg: 'sucessfully decress product', data: updateCart })
-                }
-            }
         }
     } catch (err) {
         res.status(500).send({ status: false, msg: err.message });
