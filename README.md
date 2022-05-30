@@ -1,4 +1,3 @@
-#FunctionUp Project
 Hello 👋 I'm SWATI PATHAK
 🔭 I’m currently working on ... As a Tranee At FunctionUp
 🌱 I’m currently learning ...NodeJs, JavaScript, MongoDB, GitBash any ManyMore...
