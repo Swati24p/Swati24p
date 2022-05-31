@@ -93,17 +93,26 @@ const putOrder = async function (req, res) {
 
         if (orderFind.cancellable == true) {
             if (orderFind.status == "pending") {
-                const updateStatus = await orderModel.findOneAndUpdate({ _id: orderId }, { status: "cancled" });
+                const updateStatus = await orderModel.findOneAndUpdate({ _id: orderId }, { status: "cancled" }, { new: true });
+                if (!updateStatus) {
+                    return res.status(400).send({ status: false, message: "Wont's able to change status !!!" });
+                }
+                return res.status(200).send({ status: true, message: "Order updated successfully", data: updateStatus });
+            }
+
+            if (orderFind.status == "completed") {
+                return res.status(400).send({ status: false, message: "Order already completed, won't able to change status !!!" });
+            }
+
+            if (orderFind.status == "cancled") {
+                return res.status(400).send({ status: false, message: "Order already cancled !!!" });
             }
         }
 
 
         if (orderFind.cancellable == false) {
-            return res.status(400).send({ status: false, msg: "its not cancellable" });
+            return res.status(400).send({ status: false, msg: "its not cancellable !!!" });
         }
-
-        
-        res.status(200).send({ status: true, msg: "Success !!!" });
     } catch (err) {
         res.status(500).send({ status: false, msg: err.message });
     }
