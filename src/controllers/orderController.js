@@ -1,6 +1,7 @@
 const orderModel = require("../models/orderModel");
 const UserModel = require("../Models/userModel");
 const cartModel = require("../Models/cartModel");
+const userModel = require("../Models/userModel");
 
 
 
@@ -44,7 +45,7 @@ const postOrder = async function (req, res) {
             totalItems: userCart.totalItems,
             totalQuantity: checkTotalQuantity
         }
-        
+
         const saveData = await orderModel.create(orderDetails);
         res.status(201).send({ status: true, message: 'Success', data: saveData });
     } catch (err) {
@@ -56,6 +57,52 @@ const postOrder = async function (req, res) {
 
 const putOrder = async function (req, res) {
     try {
+        const data = req.body;
+        if (Object.keys(data).length <= 0) {
+            return res.status(400).send({ status: false, msg: "Plz enter data in body !!!" });
+        }
+
+
+        const { orderId, status } = data;
+        if (!orderId) {
+            return res.status(400).send({ status: false, msg: "Plz enter orderId in body !!!" });
+        }
+        if (!status) {
+            return res.status(400).send({ statua: false, msg: "Plz enter status in body !!1" });
+        }
+
+
+        const userId = req.params.userId;
+        const userFind = await userModel.findOne({ _id: userId });
+        if (!userFind) {
+            return res.status(400).send({ status: false, msg: "User not found !!!" });
+        }
+
+
+        const jwtUserId = req.userId;
+        if (jwtUserId != userId) {
+            return res.status(400).send({ status: false, msg: "Not authorized !!!" });
+        }
+
+
+        const orderFind = await orderModel.findOne({ _id: orderId, userId: userId });
+        if (!orderFind) {
+            return res.status(400).send({ status: false, msg: "Order not found !!!" });
+        }
+
+
+        if (orderFind.cancellable == true) {
+            if (orderFind.status == "pending") {
+                const updateStatus = await orderModel.findOneAndUpdate({ _id: orderId }, { status: "cancled" });
+            }
+        }
+
+
+        if (orderFind.cancellable == false) {
+            return res.status(400).send({ status: false, msg: "its not cancellable" });
+        }
+
+        
         res.status(200).send({ status: true, msg: "Success !!!" });
     } catch (err) {
         res.status(500).send({ status: false, msg: err.message });

@@ -32,7 +32,7 @@ router.delete("/users/:userId/cart", auth.authentication, delCart);
 
 // FEATURE-4 Checkout/Order APIs
 router.post("/users/:userId/orders", auth.authentication, postOrder);
-router.put("/users/:userId/orders", putOrder);
+router.put("/users/:userId/orders", auth.authentication, putOrder);
 
 
 module.exports = router;
