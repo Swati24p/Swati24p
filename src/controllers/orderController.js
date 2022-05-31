@@ -107,7 +107,7 @@ const putOrder = async function (req, res) {
 
         if (orderFind.cancellable == true) {
             if (orderFind.status == "pending") {
-                const updateStatus = await orderModel.findOneAndUpdate({ _id: orderId }, { status: "cancled" }, { new: true });
+                const updateStatus = await orderModel.findOneAndUpdate({ _id: orderId }, { status: status }, { new: true });
                 if (!updateStatus) {
                     return res.status(400).send({ status: false, message: "Wont's able to change status !!!" });
                 }

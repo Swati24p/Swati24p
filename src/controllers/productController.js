@@ -167,7 +167,7 @@ const putIdProducts = async (req, res) => {
             if (!validUrl.isUri(uploadedFileURL)) {
                 return res.status(400).send({ status: false, msg: 'invalid uploadFileUrl' })
             }
-        } 
+        }
         const finalproduct = {
             title, description, price, currencyId: "₹", currencyFormat: "INR", isFreeShipping, productImage: uploadedFileURL, style: style, availableSizes, installments
         }
@@ -212,11 +212,8 @@ const deleteById = async function (req, res) {
         console.log("This is the error :", err.message)
         res.status(500).send({ msg: "Error", error: err.message })
     }
-}
+};
 
 
 
 module.exports = { postProducts, getProduct, getIdproducts, putIdProducts, deleteById };
-
-
-/////////////////////////////////////////////////////////////// END OF PRODUCT CONTROLLER ///////////////////////////////////////////////////
