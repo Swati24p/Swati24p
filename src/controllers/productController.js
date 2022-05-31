@@ -167,9 +167,7 @@ const putIdProducts = async (req, res) => {
             if (!validUrl.isUri(uploadedFileURL)) {
                 return res.status(400).send({ status: false, msg: 'invalid uploadFileUrl' })
             }
-        } else {
-            return res.status(400).send({ status: false, msg: "No file found" });
-        }
+        } 
         const finalproduct = {
             title, description, price, currencyId: "₹", currencyFormat: "INR", isFreeShipping, productImage: uploadedFileURL, style: style, availableSizes, installments
         }
