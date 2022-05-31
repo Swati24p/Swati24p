@@ -13,6 +13,15 @@ const postOrder = async function (req, res) {
         }
 
         const userId = req.params.userId;
+        if (userId.length < 24 || userId.length > 24) {
+            return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of userId in Params !!!" });
+        }
+
+        const userIdFindOrder = await orderModel.findOne({ userId: userId });
+        if (userIdFindOrder) {
+            return res.status(400).send({ status: false, msg: "Order already created with this user !!!" });
+        }
+
         const userFind = await UserModel.findOne({ _id: userId });
         if (!userFind) {
             return res.status(400).send({ status: false, msg: "User not found !!!" });
@@ -27,8 +36,12 @@ const postOrder = async function (req, res) {
         if (!cartId) {
             return res.staus(400).send({ status: false, msg: "Plz enter cartId in body !!!" });
         }
+        if (cartId.length < 24 || cartId.length > 24) {
+            return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of cartId in Params !!!" });
+        }
 
-        const userCart = await cartModel.findOne({ _id: cartId, userId: userId });
+        const userCart = await cartModel.findOne({ _id: cartId, userId: userId }).select({ items: 1, totalPrice: 1, totalItems: 1 })
+        console.log(userCart);
         if (!userCart) {
             return res.status(400).send({ status: false, msg: "User does not have any cart !!!" });
         }
@@ -47,7 +60,8 @@ const postOrder = async function (req, res) {
         }
 
         const saveData = await orderModel.create(orderDetails);
-        res.status(201).send({ status: true, message: 'Success', data: saveData });
+        const newData = await orderModel.findOne({ _id: saveData._id }).select({ "items._id": 0 })
+        res.status(201).send({ status: true, message: 'Success', data: newData });
     } catch (err) {
         res.status(500).send({ status: false, msg: err.message });
     }
