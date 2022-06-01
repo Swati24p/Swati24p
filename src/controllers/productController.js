@@ -136,9 +136,9 @@ const putIdProducts = async (req, res) => {
             return res.status(400).send({ status: false, message: "please enter valid productId" })
         }
 
-        const { title, description, price, isFreeShipping, style, availableSizes, installments } = body
+        let  { title, description, price, isFreeShipping, style, availableSizes, installments } = body
 
-        const findTitle = await productModel.findOne({ title: title });
+        let findTitle = await productModel.findOne({ title: title });
         if (findTitle) {
             return res.status(400).send({ status: false, msg: "Title Is Already Exists, Please try different One!!!" });
         }
@@ -149,16 +149,15 @@ const putIdProducts = async (req, res) => {
             }
         }
 
-        if (availableSizes) {
-            let clean = availableSizes.replace(/[^0-9A-Z]+/gi, "");
-            let values = clean.split('');
-            for (let i = 0; i < values.length; i++) {
-                if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
-                } else {
-                    return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
-                }
-            };
-        }
+        let clean = availableSizes.replace(/[^A-Z]+/gi, "");
+        let values = clean.split("");
+        for (let i = 0; i < values.length; i++) {
+            if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
+            } else {
+                return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
+            }
+        };
+        availableSizes=availableSizes.split(",");
 
         if (installments) {
             if (isNaN(installments) == true) {
@@ -209,7 +208,7 @@ const deleteById = async function (req, res) {
         }
 
         if (deletedProduct.isDeleted !== false) {
-            return res.status(400).send({ status: false, msg: `this ${productId} is already deleted` })
+            return res.status(404).send({ status: false, msg: `this ${productId} is Not Found` })
         }
 
         await productModel.findByIdAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })

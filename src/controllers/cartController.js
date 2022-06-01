@@ -5,12 +5,13 @@ const UserModel = require("../Models/userModel");
 const chalk = require("chalk");
 
 
+//******************************************************************** Create cart API *********************************************************************//
 
 const createCart = async (req, res) => {
     try {
         const userIdFromParams = req.params.userId
         const data = req.body
-        const { productId, quantity } = data
+        let { productId, quantity } = data
 
         //Validate body 
         if (!validator.isValidBody(data)) {
@@ -54,8 +55,8 @@ const createCart = async (req, res) => {
             return res.status(400).send({ status: false, msg: "product is deleted" });
         }
 
-        if (!validator.isValid(quantity)) {
-            return res.status(400).send({ status: false, messege: "please provide quantity" })
+        if(!quantity){
+            quantity = 1
         }
 
         if ((isNaN(Number(quantity)))) {
@@ -126,6 +127,7 @@ const createCart = async (req, res) => {
 };
 
 
+//******************************************************************** UPdateCart Details *********************************************************************//
 
 const updateCart = async (req, res) => {
     try {
@@ -265,6 +267,7 @@ const updateCart = async (req, res) => {
 };
 
 
+//******************************************************************** GetCART Details *********************************************************************//
 
 const getCart = async (req, res) => {
     try {
@@ -304,7 +307,7 @@ const getCart = async (req, res) => {
 };
 
 
-
+//******************************************************************** deleteCArt Details *********************************************************************//
 const delCart = async (req, res) => {
     try {
         let userId = req.params.userId

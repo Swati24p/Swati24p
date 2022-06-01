@@ -25,7 +25,7 @@ const cartSchema = new mongoose.Schema({
         }],
     totalPrice: {
         type: Number,
-        required: true,
+        required: true        
         //comment: "Holds total price of all the items in the cart"
     },
     totalItems: {
