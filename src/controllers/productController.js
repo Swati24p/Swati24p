@@ -8,7 +8,18 @@ const validUrl = require('valid-url')
 const postProducts = async function (req, res) {
     try {
         let body = JSON.parse(JSON.stringify(req.body));
-        const { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments } = body;
+        let { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments } = body;
+
+        let clean = availableSizes.replace(/[^A-Z]+/gi, "");
+        let values = clean.split("");
+        for (let i = 0; i < values.length; i++) {
+            if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
+            } else {
+                return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
+            }
+        };
+        availableSizes=availableSizes.split(",");
+
 
         let files = req.files;
         let uploadedFileURL = await aws.uploadFile(files[0]);
@@ -16,7 +27,6 @@ const postProducts = async function (req, res) {
             return res.status(400).send({ status: false, msg: 'invalid uploadFileUrl' })
         }
         productImage = uploadedFileURL;
-        // const availableSizesArr = JSON.parse(availableSizes)
         let userData = { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments };
         const savedData = await productModel.create(userData);
         res.status(201).send({ status: true, message: 'Success', data: savedData });
