@@ -55,9 +55,8 @@ const createCart = async (req, res) => {
         }
 
         if (!validator.isValid(quantity)) {
-            return res.status(400).send({ status: false, messege: "please provide quantity" })
-        }
-
+           return res.status(400).send({ status: false, messege: "please provide quantity" })
+       }
         if ((isNaN(Number(quantity)))) {
             return res.status(400).send({ status: false, message: 'quantity should be a valid number' })
         }
