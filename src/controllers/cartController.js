@@ -5,7 +5,6 @@ const UserModel = require("../Models/userModel");
 const chalk = require("chalk");
 
 
-//************************************************************CREATE CART API***********************************************************************//
 
 const createCart = async (req, res) => {
     try {
@@ -127,7 +126,6 @@ const createCart = async (req, res) => {
 };
 
 
-//***************************************************************UPDATE CART API********************************************************************//
 
 const updateCart = async (req, res) => {
     try {
@@ -264,12 +262,9 @@ const updateCart = async (req, res) => {
     catch (error) {
         return res.status(500).json({ status: false, message: error.message });
     }
-}
+};
 
 
-
-
-//****************************************************************GET CART API ************************************************************************//
 
 const getCart = async (req, res) => {
     try {
@@ -309,7 +304,6 @@ const getCart = async (req, res) => {
 };
 
 
-//****************************************************************DELETE CART API********************************************************************//
 
 const delCart = async (req, res) => {
     try {

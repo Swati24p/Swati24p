@@ -120,7 +120,8 @@ const validProduct = async function (req, res, next) {
         }
 
         let clean = availableSizes.replace(/[^A-Z]+/gi, "");
-        let values = clean.split('');
+        let values = clean.split("");
+        console.log(values);
         for (let i = 0; i < values.length; i++) {
             if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
             } else {

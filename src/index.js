@@ -9,6 +9,7 @@ const { AppConfig } = require('aws-sdk');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer().any())
+
 mongoose.connect("mongodb+srv://swati_pathak:DGhDxlBIIfyRwGwk@cluster0.ogdpf.mongodb.net/group-14Database", {
     useNewUrlParser: true
 }).then(() => console.log("MongoDB Is Connected !!!")).catch(err => console.log(err))
