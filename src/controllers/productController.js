@@ -149,21 +149,12 @@ const putIdProducts = async (req, res) => {
             }
         }
 
-        let clean = availableSizes.replace(/[^A-Z]+/gi, "");
-        let values = clean.split("");
-        for (let i = 0; i < values.length; i++) {
-            if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
-            } else {
-                return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
-            }
-        };
-        availableSizes=availableSizes.split(",");
-
         if (installments) {
             if (isNaN(installments) == true) {
                 return res.status(400).send({ status: false, msg: "Please Enter Number In installments !!!" });
             }
-        }
+   .
+   
 
         const searchProduct = await productModel.findOne({ _id: params.productId, isDeleted: false })
         if (!searchProduct) {
