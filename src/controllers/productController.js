@@ -168,6 +168,7 @@ const putIdProducts = async (req, res) => {
                 return res.status(400).send({ status: false, msg: "Please Enter Number In installments !!!" });
             }
         }
+   
 
         const searchProduct = await productModel.findOne({ _id: params.productId, isDeleted: false })
         if (!searchProduct) {

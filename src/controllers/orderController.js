@@ -3,7 +3,7 @@ const UserModel = require("../Models/userModel");
 const cartModel = require("../Models/cartModel");
 const userModel = require("../Models/userModel");
 
-
+//***********************************************************************createOrder*************************************************************************//
 
 const postOrder = async function (req, res) {
     try {
@@ -68,13 +68,19 @@ const postOrder = async function (req, res) {
 
 
 
+//******************************************************************update Order********************************************************************//
+
 const putOrder = async function (req, res) {
     try {
         const data = req.body;
         if (Object.keys(data).length <= 0) {
             return res.status(400).send({ status: false, msg: "Plz enter data in body !!!" });
         }
-
+        
+        const user = req.params.userId;
+        if (user.length < 24 || user.length > 24) {
+            return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of userId in Params !!!" });
+        }
 
         const { orderId, status } = data;
         if (!orderId) {
