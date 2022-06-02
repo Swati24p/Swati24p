@@ -161,7 +161,10 @@ const putIdProducts = async (req, res) => {
                 }
             };
         }
-        availableSizes = availableSizes.split(",");
+        if (availableSizes) {
+            availableSizes = availableSizes.split(",");
+        }
+
 
 
         if (installments) {
