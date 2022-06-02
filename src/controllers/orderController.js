@@ -4,7 +4,6 @@ const cartModel = require("../Models/cartModel");
 const userModel = require("../Models/userModel");
 
 
-//*******************************************************************CreateOrder API*********************************************************************//
 
 const postOrder = async function (req, res) {
     try {
@@ -38,11 +37,10 @@ const postOrder = async function (req, res) {
             return res.staus(400).send({ status: false, msg: "Plz enter cartId in body !!!" });
         }
         if (cartId.length < 24 || cartId.length > 24) {
-            return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of cartId in Params !!!" });
+            return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of cartId in Body !!!" });
         }
 
         const userCart = await cartModel.findOne({ _id: cartId, userId: userId }).select({ items: 1, totalPrice: 1, totalItems: 1 })
-        console.log(userCart);
         if (!userCart) {
             return res.status(400).send({ status: false, msg: "User does not have any cart !!!" });
         }
@@ -69,9 +67,6 @@ const postOrder = async function (req, res) {
 };
 
 
-
-
-//******************************************************************** UPdateOrder Details *********************************************************************//
 
 const putOrder = async function (req, res) {
     try {
@@ -135,7 +130,6 @@ const putOrder = async function (req, res) {
         res.status(500).send({ status: false, msg: err.message });
     }
 };
-
 
 
 

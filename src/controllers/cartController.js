@@ -55,7 +55,7 @@ const createCart = async (req, res) => {
             return res.status(400).send({ status: false, msg: "product is deleted" });
         }
 
-        if(!quantity){
+        if (!quantity) {
             quantity = 1
         }
 

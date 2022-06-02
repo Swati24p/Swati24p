@@ -196,7 +196,7 @@ const login = async function (req, res) {
         const token = jwt.sign({
             userId: userId
         },
-            "GroupNo14",{ expiresIn: "24H"}
+            "GroupNo14", { expiresIn: "24H" }
         );
 
         res.status(200).send({
