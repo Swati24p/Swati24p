@@ -18,10 +18,10 @@ const postOrder = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of userId in Params !!!" });
         }
 
-        const userIdFindOrder = await orderModel.findOne({ userId: userId });
-        if (userIdFindOrder) {
-            return res.status(400).send({ status: false, msg: "Order already created with this user !!!" });
-        }
+        // const userIdFindOrder = await orderModel.findOne({ userId: userId });
+        // if (userIdFindOrder) {
+        //     return res.status(400).send({ status: false, msg: "Order already created with this user !!!" });
+        // }
 
         const userFind = await UserModel.findOne({ _id: userId });
         if (!userFind) {
