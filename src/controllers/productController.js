@@ -140,7 +140,7 @@ const putIdProducts = async (req, res) => {
 
         let { title, description, price, isFreeShipping, style, availableSizes, installments } = body
 
-        const findTitle = await productModel.findOne({ title: title });
+        let findTitle = await productModel.findOne({ title: title });
         if (findTitle) {
             return res.status(400).send({ status: false, msg: "Title Is Already Exists, Please try different One!!!" });
         }
@@ -213,7 +213,7 @@ const deleteById = async function (req, res) {
         }
 
         if (deletedProduct.isDeleted !== false) {
-            return res.status(400).send({ status: false, msg: `this ${productId} is already deleted` })
+            return res.status(404).send({ status: false, msg: `this ${productId} is Not Found` })
         }
 
         await productModel.findByIdAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })

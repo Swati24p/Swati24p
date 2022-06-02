@@ -4,6 +4,7 @@ const cartModel = require("../Models/cartModel");
 const userModel = require("../Models/userModel");
 
 
+//*******************************************************************CreateOrder API*********************************************************************//
 
 const postOrder = async function (req, res) {
     try {
@@ -69,6 +70,9 @@ const postOrder = async function (req, res) {
 
 
 
+
+//******************************************************************** UPdateOrder Details *********************************************************************//
+
 const putOrder = async function (req, res) {
     try {
         const data = req.body;
@@ -109,7 +113,7 @@ const putOrder = async function (req, res) {
             if (orderFind.status == "pending") {
                 const updateStatus = await orderModel.findOneAndUpdate({ _id: orderId }, { status: status }, { new: true });
                 if (!updateStatus) {
-                    return res.status(400).send({ status: false, message: "Wont's able to change status !!!" });
+                    return res.status(400).send({ status: false, message: "Won't able to change status !!!" });
                 }
                 return res.status(200).send({ status: true, message: "Order updated successfully", data: updateStatus });
             }
@@ -118,7 +122,7 @@ const putOrder = async function (req, res) {
                 return res.status(400).send({ status: false, message: "Order already completed, won't able to change status !!!" });
             }
 
-            if (orderFind.status == "cancled") {
+            if (orderFind.status == "canceled") {
                 return res.status(400).send({ status: false, message: "Order already cancled !!!" });
             }
         }
@@ -131,6 +135,7 @@ const putOrder = async function (req, res) {
         res.status(500).send({ status: false, msg: err.message });
     }
 };
+
 
 
 

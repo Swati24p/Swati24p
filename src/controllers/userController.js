@@ -6,6 +6,8 @@ const aws = require('../aws/aws')
 const validUrl = require('valid-url');
 
 
+//******************************************************************** CreateUser API *********************************************************************//
+
 
 const createUser = async function (req, res) {
     try {
@@ -157,6 +159,8 @@ const createUser = async function (req, res) {
 
 
 
+//******************************************************************** User Login *********************************************************************//
+
 const login = async function (req, res) {
     try {
         const data = req.body;
@@ -190,10 +194,9 @@ const login = async function (req, res) {
 
         const userId = findData._id;
         const token = jwt.sign({
-            userId: userId,
-            expiresIn: "3600s"
+            userId: userId
         },
-            "GroupNo14"
+            "GroupNo14",{ expiresIn: "24H"}
         );
 
         res.status(200).send({
@@ -207,6 +210,8 @@ const login = async function (req, res) {
 };
 
 
+
+//******************************************************************** GetUser details API *********************************************************************//
 
 const getUser = async (req, res) => {
     try {
@@ -245,6 +250,7 @@ const getUser = async (req, res) => {
 };
 
 
+//******************************************************************** Update User details API *********************************************************************//
 
 const update = async function (req, res) {
     try {
@@ -397,7 +403,7 @@ const update = async function (req, res) {
 
         //body.address = JSON.parse(body.address)
         const updated = await UserModel.findOneAndUpdate({ _id: userId }, updatedData, { new: true })
-        return res.status(201).send({ status: true, data: updated })
+        return res.status(200).send({ status: true, data: updated })
     }
     catch (err) {
         console.log("This is the error :", err.message)
