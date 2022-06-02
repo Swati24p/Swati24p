@@ -24,12 +24,12 @@ const postOrder = async function (req, res) {
 
         const userFind = await UserModel.findOne({ _id: userId });
         if (!userFind) {
-            return res.status(400).send({ status: false, msg: "User not found !!!" });
+            return res.status(404).send({ status: false, msg: "User not found !!!" });
         }
 
         const jwtUserId = req.userId;
         if (jwtUserId != userId) {
-            return res.status(400).send({ status: false, msg: "Not authorized !!!" });
+            return res.status(401).send({ status: false, msg: "Not authorized !!!" });
         }
 
         const cartId = req.body.cartId;
@@ -42,7 +42,7 @@ const postOrder = async function (req, res) {
 
         const userCart = await cartModel.findOne({ _id: cartId, userId: userId }).select({ items: 1, totalPrice: 1, totalItems: 1 })
         if (!userCart) {
-            return res.status(400).send({ status: false, msg: "User does not have any cart !!!" });
+            return res.status(404).send({ status: false, msg: "User does not have any cart !!!" });
         }
 
         let checkTotalQuantity = 0;
@@ -88,19 +88,19 @@ const putOrder = async function (req, res) {
         const userId = req.params.userId;
         const userFind = await userModel.findOne({ _id: userId });
         if (!userFind) {
-            return res.status(400).send({ status: false, msg: "User not found !!!" });
+            return res.status(404).send({ status: false, msg: "User not found !!!" });
         }
 
 
         const jwtUserId = req.userId;
         if (jwtUserId != userId) {
-            return res.status(400).send({ status: false, msg: "Not authorized !!!" });
+            return res.status(401).send({ status: false, msg: "Not authorized !!!" });
         }
 
 
         const orderFind = await orderModel.findOne({ _id: orderId, userId: userId });
         if (!orderFind) {
-            return res.status(400).send({ status: false, msg: "Order not found !!!" });
+            return res.status(404).send({ status: false, msg: "Order not found !!!" });
         }
 
 
