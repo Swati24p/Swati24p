@@ -18,7 +18,7 @@ const postProducts = async function (req, res) {
                 return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
             }
         };
-        availableSizes=availableSizes.split(",");
+        availableSizes = availableSizes.split(",");
 
 
         let files = req.files;
@@ -136,7 +136,7 @@ const putIdProducts = async (req, res) => {
             return res.status(400).send({ status: false, message: "please enter valid productId" })
         }
 
-        let  { title, description, price, isFreeShipping, style, availableSizes, installments } = body
+        let { title, description, price, isFreeShipping, style, availableSizes, installments } = body
 
         let findTitle = await productModel.findOne({ title: title });
         if (findTitle) {
@@ -149,11 +149,27 @@ const putIdProducts = async (req, res) => {
             }
         }
 
+        if (availableSizes) {
+            let clean = availableSizes.replace(/[^A-Z]+/gi, "");
+            let values = clean.split('');
+            for (let i = 0; i < values.length; i++) {
+                if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
+                } else {
+                    return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
+                }
+            };
+        }
+        if (availableSizes) {
+            availableSizes = availableSizes.split(",");
+        }
+
+
+
         if (installments) {
             if (isNaN(installments) == true) {
                 return res.status(400).send({ status: false, msg: "Please Enter Number In installments !!!" });
             }
-   .
+        }
    
 
         const searchProduct = await productModel.findOne({ _id: params.productId, isDeleted: false })
@@ -209,7 +225,6 @@ const deleteById = async function (req, res) {
     }
 
     catch (err) {
-        console.log("This is the error :", err.message)
         res.status(500).send({ msg: "Error", error: err.message })
     }
 };

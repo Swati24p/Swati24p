@@ -4,7 +4,6 @@ const cartModel = require("../Models/cartModel");
 const userModel = require("../Models/userModel");
 
 
-//*******************************************************************CreateOrder API*********************************************************************//
 
 const postOrder = async function (req, res) {
     try {
@@ -18,19 +17,19 @@ const postOrder = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of userId in Params !!!" });
         }
 
-        const userIdFindOrder = await orderModel.findOne({ userId: userId });
-        if (userIdFindOrder) {
-            return res.status(400).send({ status: false, msg: "Order already created with this user !!!" });
-        }
+        // const userIdFindOrder = await orderModel.findOne({ userId: userId });
+        // if (userIdFindOrder) {
+        //     return res.status(400).send({ status: false, msg: "Order already created with this user !!!" });
+        // }
 
         const userFind = await UserModel.findOne({ _id: userId });
         if (!userFind) {
-            return res.status(400).send({ status: false, msg: "User not found !!!" });
+            return res.status(404).send({ status: false, msg: "User not found !!!" });
         }
 
         const jwtUserId = req.userId;
         if (jwtUserId != userId) {
-            return res.status(400).send({ status: false, msg: "Not authorized !!!" });
+            return res.status(401).send({ status: false, msg: "Not authorized !!!" });
         }
 
         const cartId = req.body.cartId;
@@ -38,13 +37,12 @@ const postOrder = async function (req, res) {
             return res.staus(400).send({ status: false, msg: "Plz enter cartId in body !!!" });
         }
         if (cartId.length < 24 || cartId.length > 24) {
-            return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of cartId in Params !!!" });
+            return res.status(400).send({ status: false, msg: "Plz Enter Valid Length Of cartId in Body !!!" });
         }
 
         const userCart = await cartModel.findOne({ _id: cartId, userId: userId }).select({ items: 1, totalPrice: 1, totalItems: 1 })
-        console.log(userCart);
         if (!userCart) {
-            return res.status(400).send({ status: false, msg: "User does not have any cart !!!" });
+            return res.status(404).send({ status: false, msg: "User does not have any cart !!!" });
         }
 
         let checkTotalQuantity = 0;
@@ -70,9 +68,6 @@ const postOrder = async function (req, res) {
 
 
 
-
-//******************************************************************** UPdateOrder Details *********************************************************************//
-
 const putOrder = async function (req, res) {
     try {
         const data = req.body;
@@ -93,19 +88,19 @@ const putOrder = async function (req, res) {
         const userId = req.params.userId;
         const userFind = await userModel.findOne({ _id: userId });
         if (!userFind) {
-            return res.status(400).send({ status: false, msg: "User not found !!!" });
+            return res.status(404).send({ status: false, msg: "User not found !!!" });
         }
 
 
         const jwtUserId = req.userId;
         if (jwtUserId != userId) {
-            return res.status(400).send({ status: false, msg: "Not authorized !!!" });
+            return res.status(401).send({ status: false, msg: "Not authorized !!!" });
         }
 
 
         const orderFind = await orderModel.findOne({ _id: orderId, userId: userId });
         if (!orderFind) {
-            return res.status(400).send({ status: false, msg: "Order not found !!!" });
+            return res.status(404).send({ status: false, msg: "Order not found !!!" });
         }
 
 
@@ -135,7 +130,6 @@ const putOrder = async function (req, res) {
         res.status(500).send({ status: false, msg: err.message });
     }
 };
-
 
 
 
