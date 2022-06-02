@@ -152,7 +152,6 @@ const createUser = async function (req, res) {
 
     }
     catch (err) {
-        console.log("This is the error :", err.message)
         res.status(500).send({ msg: "Error", error: err.message })
     }
 };
@@ -406,7 +405,6 @@ const update = async function (req, res) {
         return res.status(200).send({ status: true, data: updated })
     }
     catch (err) {
-        console.log("This is the error :", err.message)
         res.status(500).send({ msg: "Error", error: err.message })
     }
 };

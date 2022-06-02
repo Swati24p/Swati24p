@@ -11,7 +11,6 @@ const postProducts = async function (req, res) {
         let { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments } = body;
 
         let clean = availableSizes.replace(/[^A-Z]+/gi, "");
-        console.log(clean);
         let values = clean.split("");
         for (let i = 0; i < values.length; i++) {
             if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
@@ -20,7 +19,6 @@ const postProducts = async function (req, res) {
             }
         };
         availableSizes = availableSizes.split(",");
-        console.log(availableSizes);
 
 
         let files = req.files;
@@ -226,7 +224,6 @@ const deleteById = async function (req, res) {
     }
 
     catch (err) {
-        console.log("This is the error :", err.message)
         res.status(500).send({ msg: "Error", error: err.message })
     }
 };
