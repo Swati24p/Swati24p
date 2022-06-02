@@ -1,25 +1,23 @@
 const productModel = require("../Models/productModel");
 const validator = require('../middleware/validation');
 const aws = require('../aws/aws');
-const validUrl = require('valid-url')
+const validUrl = require('valid-url');
 
-//====================================================Post/Create Product Api=============================================================================//
+
 
 const postProducts = async function (req, res) {
     try {
         let body = JSON.parse(JSON.stringify(req.body));
         let { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments } = body;
 
-        let clean = availableSizes.replace(/[^A-Z]+/gi, "");
-        let values = clean.split("");
-        for (let i = 0; i < values.length; i++) {
-            if ((values[i] == 'S') || (values[i] == 'XS') || (values[i] == 'M') || (values[i] == 'X') || (values[i] == 'L') || (values[i] == 'XXL') || (values[i] == 'XL')) {
-            } else {
-                return res.status(400).send({ status: false, msg: "Plz Enter availableSizes From S, XS, M, X, L, XXL, XL" });
+        let sizes = availableSizes.split(/[\s,]+/)
+        let arr = ["S", "XS", "M", "X", "L", "XXL", "XL"]
+        console.log(sizes)
+        for (let i = 0; i < sizes.length; i++) {
+            if (arr.indexOf(sizes[i]) == -1) {
+                return res.status(400).send({ status: false, message: "availabe sizes must be (S, XS,M,X, L,XXL, XL)" });
             }
-        };
-        availableSizes = availableSizes.split(",");
-
+        }
 
         let files = req.files;
         let uploadedFileURL = await aws.uploadFile(files[0]);
@@ -36,7 +34,7 @@ const postProducts = async function (req, res) {
     }
 };
 
-//======================================================get Products from Query params===================================================================//
+
 
 const getProduct = async (req, res) => {
     try {
