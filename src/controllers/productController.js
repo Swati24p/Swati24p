@@ -86,9 +86,9 @@ const getProduct = async (req, res) => {
         return res.status(500).send({ status: false, error: error.message })
 
     }
-}
+};
 
-//======================================================Get products by path params===================================================================//
+
 
 const getIdproducts = async (req, res) => {
 
@@ -112,11 +112,9 @@ const getIdproducts = async (req, res) => {
     catch (error) {
         res.status(500).send({ Error: error.message })
     }
-}
+};
 
 
-
-//*************************************************************Update products by productId**********************************************************************//
 
 const putIdProducts = async (req, res) => {
 
@@ -168,7 +166,7 @@ const putIdProducts = async (req, res) => {
                 return res.status(400).send({ status: false, msg: "Please Enter Number In installments !!!" });
             }
         }
-   
+
 
         const searchProduct = await productModel.findOne({ _id: params.productId, isDeleted: false })
         if (!searchProduct) {
@@ -193,10 +191,9 @@ const putIdProducts = async (req, res) => {
     catch (error) {
         res.status(500).send({ Error: error.message })
     }
-}
+};
 
 
-// ******************************************************** DELETE /products/:productId ******************************************************* //
 
 const deleteById = async function (req, res) {
     try {

@@ -5,7 +5,6 @@ const UserModel = require("../Models/userModel");
 const chalk = require("chalk");
 
 
-//******************************************************************** Create cart API *********************************************************************//
 
 const createCart = async (req, res) => {
     try {
@@ -127,7 +126,6 @@ const createCart = async (req, res) => {
 };
 
 
-//******************************************************************** UPdateCart Details *********************************************************************//
 
 const updateCart = async (req, res) => {
     try {
@@ -267,7 +265,6 @@ const updateCart = async (req, res) => {
 };
 
 
-//******************************************************************** GetCART Details *********************************************************************//
 
 const getCart = async (req, res) => {
     try {
@@ -307,7 +304,7 @@ const getCart = async (req, res) => {
 };
 
 
-//******************************************************************** deleteCArt Details *********************************************************************//
+
 const delCart = async (req, res) => {
     try {
         let userId = req.params.userId

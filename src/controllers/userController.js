@@ -6,8 +6,6 @@ const aws = require('../aws/aws')
 const validUrl = require('valid-url');
 
 
-//******************************************************************** CreateUser API *********************************************************************//
-
 
 const createUser = async function (req, res) {
     try {
@@ -158,8 +156,6 @@ const createUser = async function (req, res) {
 
 
 
-//******************************************************************** User Login *********************************************************************//
-
 const login = async function (req, res) {
     try {
         const data = req.body;
@@ -210,8 +206,6 @@ const login = async function (req, res) {
 
 
 
-//******************************************************************** GetUser details API *********************************************************************//
-
 const getUser = async (req, res) => {
     try {
         let userId = req.params.userId
@@ -249,7 +243,6 @@ const getUser = async (req, res) => {
 };
 
 
-//******************************************************************** Update User details API *********************************************************************//
 
 const update = async function (req, res) {
     try {

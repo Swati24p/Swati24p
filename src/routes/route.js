@@ -8,6 +8,7 @@ const auth = require('../middleware/auth');
 const valid = require("../middleware/validation");
 
 
+
 // FEATURE-1 User APIs
 router.post("/register", createUser);
 router.post("/login", login);
@@ -33,6 +34,7 @@ router.delete("/users/:userId/cart", auth.authentication, delCart);
 // FEATURE-4 Checkout/Order APIs
 router.post("/users/:userId/orders", auth.authentication, postOrder);
 router.put("/users/:userId/orders", auth.authentication, putOrder);
+
 
 
 module.exports = router;

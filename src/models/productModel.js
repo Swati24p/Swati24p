@@ -42,7 +42,6 @@ const productSchema = new mongoose.Schema({
     installments: { type: Number },
     deletedAt: {
         type: Date
-        //default: null
     },
     isDeleted: {
         type: Boolean,

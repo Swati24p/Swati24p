@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const productModel = require("../Models/productModel");
 
 
+
 //this validation will check the type of values--
 const isValid = function (value) {
     if (typeof value === 'undefined' || value === null) return false
@@ -119,8 +120,6 @@ const validProduct = async function (req, res, next) {
             return res.status(400).send({ status: false, msg: "Plz Enter availableSizes In Body !!!" });
         }
 
-        
-
         if (isNaN(installments) == true) {
             return res.status(400).send({ status: false, msg: "Plz Enter Number In installments !!!" });
         }
@@ -135,6 +134,7 @@ const validProduct = async function (req, res, next) {
         res.status(500).send({ status: false, msg: err.message });
     }
 };
+
 
 
 module.exports = { isValid, isValidBody, isValidObjectId, isValidEmail, isValidNumber, isValidName, isValidPassword, isValidPincode, isValidPrice, isValidSize, validProduct };
