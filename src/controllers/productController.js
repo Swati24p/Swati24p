@@ -4,7 +4,6 @@ const aws = require('../aws/aws');
 const validUrl = require('valid-url');
 
 
-
 const postProducts = async function (req, res) {
     try {
         let body = JSON.parse(JSON.stringify(req.body));
@@ -223,7 +222,6 @@ const deleteById = async function (req, res) {
         res.status(500).send({ msg: "Error", error: err.message })
     }
 };
-
 
 
 module.exports = { postProducts, getProduct, getIdproducts, putIdProducts, deleteById };

@@ -5,7 +5,6 @@ const UserModel = require("../Models/userModel");
 const chalk = require("chalk");
 
 
-
 const createCart = async (req, res) => {
     try {
         const userIdFromParams = req.params.userId
@@ -343,7 +342,6 @@ const delCart = async (req, res) => {
         return res.status(500).send({ status: false, message: error.message })
     }
 };
-
 
 
 module.exports = { createCart, updateCart, getCart, delCart };

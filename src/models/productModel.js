@@ -32,14 +32,18 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },  // s3 link
-    style: { type: String, trim: true },
+    style: {
+        type: String,
+        trim: true
+    },
     availableSizes: {
         type: [String],
         required: true,
         trim: true
-        // enum: ['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL']
     },
-    installments: { type: Number },
+    installments: {
+        type: Number
+    },
     deletedAt: {
         type: Date
     },
@@ -47,6 +51,7 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('product', productSchema);

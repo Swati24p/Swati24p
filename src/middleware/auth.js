@@ -11,7 +11,7 @@ const authToken = (token) => {
         }
     })
     return tokenValidate
-}
+};
 
 const authentication = async function (req, res, next) {
     try {

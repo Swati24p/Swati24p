@@ -1,4 +1,4 @@
-const aws = require("aws-sdk");
+const aws = require("aws-sdk"); //Amazon Web Services Software Development Kit
 
 
 

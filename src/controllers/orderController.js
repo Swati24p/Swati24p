@@ -4,7 +4,6 @@ const cartModel = require("../Models/cartModel");
 const userModel = require("../Models/userModel");
 
 
-
 const postOrder = async function (req, res) {
     try {
         const data = req.body;
@@ -55,8 +54,7 @@ const postOrder = async function (req, res) {
         }
 
         const saveData = await orderModel.create(orderDetails);
-        const newData = await orderModel.findOne({ _id: saveData._id }).select({ "items._id": 0 })
-        res.status(201).send({ status: true, message: 'Success', data: newData });
+        res.status(201).send({ status: true, message: 'Success', data: saveData });
     } catch (err) {
         res.status(500).send({ status: false, msg: err.message });
     }
@@ -130,7 +128,6 @@ const putOrder = async function (req, res) {
         res.status(500).send({ status: false, msg: err.message });
     }
 };
-
 
 
 module.exports = { postOrder, putOrder };

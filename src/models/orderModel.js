@@ -17,9 +17,9 @@ const orderSchema = new mongoose.Schema({
             type: Number,
             required: true,
             default: 1
-        }
-    }]
-    ,
+        },
+        _id: 0
+    }],
     totalPrice: {
         type: Number,
         required: true
@@ -44,7 +44,9 @@ const orderSchema = new mongoose.Schema({
         default: "pending",
         enum: ["pending", "completed", "cancled"]
     },
-    deletedAt: { type: Date },
+    deletedAt: {
+        type: Date
+    },
     isDeleted: {
         type: Boolean,
         default: false
