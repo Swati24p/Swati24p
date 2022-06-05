@@ -295,7 +295,7 @@ const update = async function (req, res) {
 
             // Duplicate email
             const duplicatemail = await UserModel.findOne({ email: email })
-            if (duplicatemail.length) {
+            if (duplicatemail) {
                 return res.status(400).send({ status: false, msg: "email id already exist" })
             }
             updatedData['email'] = email
@@ -309,7 +309,7 @@ const update = async function (req, res) {
 
             // Duplicate phone
             const duplicatePhone = await UserModel.findOne({ phone: phone })
-            if (duplicatePhone.length) {
+            if (duplicatePhone) {
                 return res.status(400).send({ status: false, msg: "phone number already exist" })
             }
             updatedData['phone'] = phone
@@ -391,7 +391,7 @@ const update = async function (req, res) {
             }
         }
 
-        //body.address = JSON.parse(body.address)
+       // body.address = JSON.parse(body.address)
         const updated = await UserModel.findOneAndUpdate({ _id: userId }, updatedData, { new: true })
         return res.status(200).send({ status: true, data: updated })
     }
