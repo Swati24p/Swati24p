@@ -1,4 +1,3 @@
-#Uranium
 ## Project - Products Management
 
 ### Key points
@@ -367,9 +366,6 @@ Send [form-data](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
 - Each api should have a new request in this collection
 - Each request in the collection should be rightly named. Eg Create user, Create product, Get products etc
 - Each member of each team should have their tests in running state
-
-Refer below sample
- ![A Postman collection and request sample](assets/Postman-collection-sample.png)
 
 ## Response
 
